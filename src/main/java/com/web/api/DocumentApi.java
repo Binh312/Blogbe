@@ -47,4 +47,22 @@ public class DocumentApi {
         Document document = documentService.findById(id);
         return new ResponseEntity<>(document, HttpStatus.CREATED);
     }
+
+    @GetMapping("/public/get-document-actived")
+    public ResponseEntity<?> getDocumentActived(@RequestBody Pageable pageable){
+        Page<Document> documentPage = documentService.getDocumentActived(pageable);
+        return new ResponseEntity<>(documentPage, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/public/search-document-by-name")
+    public ResponseEntity<?> searchDocumentByName(@RequestParam String name, Pageable pageable){
+        Page<Document> documentPage = documentService.searchDocumentByName(name,pageable);
+        return new ResponseEntity<>(documentPage, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/public/get-document-by-category")
+    public ResponseEntity<?> getDocumentByCategory(@RequestParam Long categoryId, Pageable pageable){
+        Page<Document> documentPage = documentService.getDocumentByCategory(categoryId,pageable);
+        return new ResponseEntity<>(documentPage, HttpStatus.CREATED);
+    }
 }
