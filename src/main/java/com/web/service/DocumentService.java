@@ -3,6 +3,7 @@ package com.web.service;
 import com.web.dto.request.DocumentRequest;
 import com.web.dto.request.FileDto;
 import com.web.entity.*;
+import com.web.enums.ActiveStatus;
 import com.web.exception.MessageException;
 import com.web.repository.CategoryRepository;
 import com.web.repository.DocumentCategoryRepository;
@@ -172,5 +173,21 @@ public class DocumentService {
     public Page<Document> getDocumentByCategory(Long categoryId, Pageable pageable){
         Page<Document> documentPage = documentRepository.getDocumentByCategory(categoryId,pageable);
         return documentPage;
+    }
+
+    public ActiveStatus activeOrUnactive(Long documentId){
+        Optional<Document> document = documentRepository.findById(documentId);
+        if (document.isEmpty()){
+            throw new MessageException("document này không tồn tại!");
+        }
+        if (document.get().getActived() == true){
+            document.get().setActived(false);
+            documentRepository.save(document.get());
+            return ActiveStatus.DA_KHOA;
+        } else {
+            document.get().setActived(true);
+            documentRepository.save(document.get());
+            return ActiveStatus.DA_MO_KHOA;
+        }
     }
 }

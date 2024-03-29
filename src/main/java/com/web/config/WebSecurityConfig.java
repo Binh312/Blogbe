@@ -72,7 +72,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/admin/**").hasAuthority(Contains.ROLE_ADMIN)
                 .antMatchers("/api/user/**").hasAuthority(Contains.ROLE_USER)
                 .antMatchers("/api/*/admin/**").hasAuthority(Contains.ROLE_ADMIN)
-                .antMatchers("/api/*/all/**").hasAnyAuthority(Contains.ROLE_ADMIN, Contains.ROLE_USER)
+                .antMatchers("/api/*/blog-manager/**").hasAnyAuthority(Contains.ROLE_BLOG_MANAGER, Contains.ROLE_ADMIN)
+                .antMatchers("/api/*/document-manager/**").hasAnyAuthority(Contains.ROLE_DOCUMENT_MANAGER, Contains.ROLE_ADMIN)
+                .antMatchers("/api/*/all-blog/**").hasAnyAuthority(Contains.ROLE_ADMIN, Contains.ROLE_USER, Contains.ROLE_BLOG_MANAGER)
+                .antMatchers("/api/*/all-document/**").hasAnyAuthority(Contains.ROLE_ADMIN, Contains.ROLE_USER, Contains.ROLE_DOCUMENT_MANAGER)
+                .antMatchers("/api/*/all/**").hasAnyAuthority(Contains.ROLE_ADMIN, Contains.ROLE_USER, Contains.ROLE_BLOG_MANAGER, Contains.ROLE_DOCUMENT_MANAGER)
                 .and()
                 .apply(securityConfigurerAdapter());
     }

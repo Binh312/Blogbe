@@ -2,6 +2,7 @@ package com.web.api;
 
 import com.web.dto.request.DocumentRequest;
 import com.web.entity.Document;
+import com.web.enums.ActiveStatus;
 import com.web.repository.DocumentRepository;
 import com.web.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class DocumentApi {
         return new ResponseEntity<>(document, HttpStatus.CREATED);
     }
 
-    @GetMapping("/all/find-all")
+    @GetMapping("/document-manager/find-all")
     public ResponseEntity<?> findAll(Pageable pageable){
         Page<Document> document = documentService.findAll(pageable);
         return new ResponseEntity<>(document, HttpStatus.CREATED);
@@ -48,7 +49,7 @@ public class DocumentApi {
         return new ResponseEntity<>(document, HttpStatus.CREATED);
     }
 
-    @GetMapping("/public/get-document-actived")
+    @GetMapping("/public/find-all")
     public ResponseEntity<?> getDocumentActived(@RequestBody Pageable pageable){
         Page<Document> documentPage = documentService.getDocumentActived(pageable);
         return new ResponseEntity<>(documentPage, HttpStatus.CREATED);
@@ -64,5 +65,11 @@ public class DocumentApi {
     public ResponseEntity<?> getDocumentByCategory(@RequestParam Long categoryId, Pageable pageable){
         Page<Document> documentPage = documentService.getDocumentByCategory(categoryId,pageable);
         return new ResponseEntity<>(documentPage, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/document-manager/active-or-unacative")
+    public ResponseEntity<?> activeOrUnactive(@RequestParam Long documentId){
+        ActiveStatus activeStatuse = documentService.activeOrUnactive(documentId);
+        return new ResponseEntity<>(activeStatuse, HttpStatus.CREATED);
     }
 }

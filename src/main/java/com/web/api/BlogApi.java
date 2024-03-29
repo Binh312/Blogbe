@@ -19,7 +19,6 @@ public class BlogApi {
     @Autowired
     private BlogService blogService;
 
-//    @RequestMapping(method = RequestMethod.POST)
     @PostMapping("/all/save")
     public ResponseEntity<?> saveOrUpdate(@RequestBody BlogRequest blogRequest){
         Blog blog = blogService.save(blogRequest);
@@ -32,9 +31,9 @@ public class BlogApi {
         return new ResponseEntity<>(blog, HttpStatus.CREATED);
     }
 
-    @GetMapping("/all/find-all")
+    @GetMapping("/blog-manager/find-all")
     public ResponseEntity<?> findAll(Pageable pageable){
-        Page<Blog> blog =blogService.findAll(pageable);
+        Page<Blog> blog = blogService.findAll(pageable);
         return new ResponseEntity<>(blog, HttpStatus.CREATED);
     }
 
@@ -43,7 +42,7 @@ public class BlogApi {
         blogService.deleteBlog(blogID);
     }
 
-    @GetMapping("/public/get-blog-actived")
+    @GetMapping("/public/get-all-blog")
     public ResponseEntity<?> getBlogActived(@RequestBody Pageable pageable){
         Page<Blog> page = blogService.getBlogActived(pageable);
         return new ResponseEntity<>(page, HttpStatus.CREATED);
@@ -61,7 +60,7 @@ public class BlogApi {
         return new ResponseEntity<>(page, HttpStatus.CREATED);
     }
 
-    @GetMapping("/public/active-or-unacative")
+    @GetMapping("/blog-manager/active-or-unacative")
     public ResponseEntity<?> activeOrUnactive(@RequestParam Long blogId){
         ActiveStatus activeStatuse = blogService.activeOrUnactive(blogId);
         return new ResponseEntity<>(activeStatuse, HttpStatus.CREATED);
