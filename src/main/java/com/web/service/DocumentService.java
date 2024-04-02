@@ -58,7 +58,7 @@ public class DocumentService {
         Document document = new Document();
         document.setCreatedDate(new Date(System.currentTimeMillis()));
         document.setCreatedTime(new Time(System.currentTimeMillis()));
-        document.setUser(userUtils.getUserWithAuthority());
+        document.setUser(user);
         document.setNumView(0);
         document.setImage(request.getImage());
         document.setDescription(request.getDescription());
@@ -149,6 +149,14 @@ public class DocumentService {
         if (document.isEmpty()){
             throw new MessageException("Document không tồn tại");
         }
+
+        User user = userUtils.getUserWithAuthority();
+
+        if (document.get().getUser().getId() != user.getId() && !user.getRole().equals(Contains.ROLE_ADMIN)
+                && !user.getRole().equals(Contains.ROLE_DOCUMENT_MANAGER)){
+            throw new MessageException("Không đủ quyền");
+        }
+
         documentRepository.delete(document.get());
     }
 

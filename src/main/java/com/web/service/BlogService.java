@@ -62,7 +62,7 @@ public class BlogService {
         Blog blog = blogMapper.convertRequestToBlog(request);
         blog.setCreatedDate(new Date(System.currentTimeMillis()));
         blog.setCreatedTime(new Time(System.currentTimeMillis()));
-        blog.setUser(userUtils.getUserWithAuthority());
+        blog.setUser(user);
         blog.setNumLike(0);
         blog.setNumView(0);
         if(user.getRole().equals(Contains.ROLE_ADMIN)){
@@ -150,7 +150,8 @@ public class BlogService {
         // lấy thông tin user đang đăng nhập (user gửi yêu cầu)
         User user = userUtils.getUserWithAuthority();
 
-        if (blogOptional.get().getUser().getId() != user.getId() && !user.getRole().equals(Contains.ROLE_ADMIN)){
+        if (blogOptional.get().getUser().getId() != user.getId() && !user.getRole().equals(Contains.ROLE_ADMIN)
+                && !user.getRole().equals(Contains.ROLE_BLOG_MANAGER)){
             throw new MessageException("Không đủ quyền");
         }
 
