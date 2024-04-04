@@ -8,9 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BlogRepository extends JpaRepository<Blog, Long> {
+
+    @Query("select b from Blog b where b.id = ?1 and b.actived = true")
+    Optional<Blog> getBlogById(Long id);
 
     @Query("select b from Blog b where b.actived = true")
     Page<Blog> getBlogActived(Pageable pageable);

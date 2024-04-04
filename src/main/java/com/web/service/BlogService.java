@@ -87,7 +87,6 @@ public class BlogService {
         return result;
     }
 
-
     public Blog update(BlogRequest request) {
         if (request.getId() == null) {
             throw new MessageException("Id is not null");
@@ -135,6 +134,22 @@ public class BlogService {
             blogFileRepository.save(blogFile);
         }
         return result;
+    }
+
+    public Blog getBlogById(Long id){
+        Optional<Blog> blog = blogRepository.getBlogById(id);
+        if (blog.isEmpty()){
+            throw new MessageException("Blog không tồn tại");
+        }
+        return blog.get();
+    }
+
+    public Blog findById(Long id){
+        Optional<Blog> blog = blogRepository.findById(id);
+        if (blog.isEmpty()){
+            throw new MessageException("Blog không tồn tại");
+        }
+        return blog.get();
     }
 
     public Page<Blog> findAll(Pageable pageable){
