@@ -67,7 +67,7 @@ public class DocumentApi {
         return new ResponseEntity<>(documentPage, HttpStatus.CREATED);
     }
 
-    @GetMapping("/document-manager/active-or-unacative")
+    @PostMapping("/document-manager/active-or-unacative")
     public ResponseEntity<?> activeOrUnactive(@RequestParam Long documentId){
         ActiveStatus activeStatuse = documentService.activeOrUnactive(documentId);
         return new ResponseEntity<>(activeStatuse, HttpStatus.CREATED);

@@ -72,7 +72,7 @@ public class BlogApi {
         return new ResponseEntity<>(page, HttpStatus.CREATED);
     }
 
-    @GetMapping("/blog-manager/active-or-unacative")
+    @PostMapping("/blog-manager/active-or-unacative")
     public ResponseEntity<?> activeOrUnactive(@RequestParam Long blogId){
         ActiveStatus activeStatuse = blogService.activeOrUnactive(blogId);
         return new ResponseEntity<>(activeStatuse, HttpStatus.CREATED);
