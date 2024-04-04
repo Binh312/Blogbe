@@ -116,9 +116,10 @@ public class BlogService {
         Blog blog = blogMapper.convertRequestToBlog(request);
         blog.setCreatedDate(blogExist.get().getCreatedDate());
         blog.setCreatedTime(blogExist.get().getCreatedTime());
-        blog.setUser(userUtils.getUserWithAuthority());
+        blog.setUser(blogExist.get().getUser());
         blog.setNumLike(blogExist.get().getNumLike());
         blog.setNumView(blogExist.get().getNumView());
+        blog.setActived(true);
         Blog result = blogRepository.save(blog);
 
         blogCategoryRepository.deleteByBlog(result.getId());
