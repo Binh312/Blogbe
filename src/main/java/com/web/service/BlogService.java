@@ -96,9 +96,13 @@ public class BlogService {
             throw new MessageException("blog: "+request.getId()+" not found");
         }
         // nếu user muốn sửa khác với user đăng thì báo lỗi
-        if(blogExist.get().getUser().getId() != userUtils.getUserWithAuthority().getId()){
-            throw new MessageException("Bạn không đủ quyền");
+        User user = userUtils.getUserWithAuthority();
+
+        if (blogExist.get().getUser().getId() != user.getId() && !user.getRole().equals(Contains.ROLE_ADMIN)
+                && !user.getRole().equals(Contains.ROLE_BLOG_MANAGER)){
+            throw new MessageException("Không đủ quyền");
         }
+
         List<Category> categories = new ArrayList<>();
         // kiểm tra xem có danh mục nào không tồn tại không, nếu có thì hủy hàm, báo lỗi
         for (Long id : request.getListCategoryId()) {

@@ -31,13 +31,13 @@ public class BlogApi {
         return new ResponseEntity<>(blog, HttpStatus.CREATED);
     }
 
-    @GetMapping("/blog-manager/get-blog-by-id")
+    @GetMapping("/all/get-blog-by-id")
     public ResponseEntity<?> getBlogById(@RequestParam Long id){
         Blog blog = blogService.getBlogById(id);
         return new ResponseEntity<>(blog, HttpStatus.CREATED);
     }
 
-    @GetMapping("/all/findbyid")
+    @GetMapping("/blog-manager/findbyid")
     public ResponseEntity<?> findById(@RequestParam Long id){
         Blog blog = blogService.findById(id);
         return new ResponseEntity<>(blog, HttpStatus.CREATED);
