@@ -119,7 +119,7 @@ public class BlogService {
         blog.setUser(blogExist.get().getUser());
         blog.setNumLike(blogExist.get().getNumLike());
         blog.setNumView(blogExist.get().getNumView());
-        blog.setActived(true);
+        blog.setActived(blogExist.get().getActived());
         Blog result = blogRepository.save(blog);
 
         blogCategoryRepository.deleteByBlog(result.getId());
