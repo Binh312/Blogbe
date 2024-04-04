@@ -50,7 +50,7 @@ public class DocumentApi {
     }
 
     @GetMapping("/public/find-all")
-    public ResponseEntity<?> getDocumentActived(@RequestBody Pageable pageable){
+    public ResponseEntity<?> getDocumentActived(Pageable pageable){
         Page<Document> documentPage = documentService.getDocumentActived(pageable);
         return new ResponseEntity<>(documentPage, HttpStatus.CREATED);
     }

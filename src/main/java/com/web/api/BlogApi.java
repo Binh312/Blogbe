@@ -43,7 +43,7 @@ public class BlogApi {
     }
 
     @GetMapping("/public/get-all-blog")
-    public ResponseEntity<?> getBlogActived(@RequestBody Pageable pageable){
+    public ResponseEntity<?> getBlogActived(Pageable pageable){
         Page<Blog> page = blogService.getBlogActived(pageable);
         return new ResponseEntity<>(page, HttpStatus.CREATED);
     }

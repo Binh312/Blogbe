@@ -28,17 +28,17 @@ public class UserUtils implements UserDetailsService {
         return new CustomUserDetails(user.get());
     }
 
-    public User getUserWithAuthority(){
-        Long id =Long.valueOf(SecurityUtils.getCurrentUserLogin().get());
+    public User getUserWithAuthority() {
+        Long id = Long.valueOf(SecurityUtils.getCurrentUserLogin().get());
         return userRepository.findById(id).get();
     }
 
-    public String randomKey(){
+    public String randomKey() {
         String str = "12345667890";
-        Integer length = str.length()-1;
+        Integer length = str.length() - 1;
         StringBuilder stringBuilder = new StringBuilder("");
-        for(int i=0; i<6; i++){
-            Integer ran = (int)(Math.random()*length);
+        for (int i = 0; i < 6; i++) {
+            Integer ran = (int) (Math.random() * length);
             stringBuilder.append(str.charAt(ran));
         }
         return String.valueOf(stringBuilder);
