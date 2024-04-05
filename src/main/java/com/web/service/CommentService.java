@@ -3,6 +3,7 @@ package com.web.service;
 import com.web.dto.request.CommentRequest;
 import com.web.entity.Blog;
 import com.web.entity.Comment;
+import com.web.entity.User;
 import com.web.exception.MessageException;
 import com.web.repository.BlogRepository;
 import com.web.repository.CommentRepository;
@@ -66,10 +67,20 @@ public class CommentService {
             throw new MessageException("Comment không tồn tại");
         }
 
-        if (userUtils.getUserWithAuthority().getId() != comment.get().getUser().getId() &&
-                userUtils.getUserWithAuthority().getRole().equals(Contains.ROLE_USER)) {
-            throw new MessageException("Người dùng không đủ quyền");
+        User user = userUtils.getUserWithAuthority();
+
+        if (user.getId() != comment.get().getUser().getId()
+                && !user.getRole().equals(Contains.ROLE_ADMIN)
+                && !user.getRole().equals(Contains.ROLE_BLOG_MANAGER)
+                && user.getRole().equals(Contains.ROLE_USER)
+                || user.getRole().equals(Contains.ROLE_DOCUMENT_MANAGER)){
+            throw new MessageException("Không đủ quyền");
         }
+
+//        if (userUtils.getUserWithAuthority().getId() != comment.get().getUser().getId() &&
+//                userUtils.getUserWithAuthority().getRole().equals(Contains.ROLE_USER)) {
+//            throw new MessageException("Người dùng không đủ quyền");
+//        }
         commentRepository.delete(comment.get());
     }
 
