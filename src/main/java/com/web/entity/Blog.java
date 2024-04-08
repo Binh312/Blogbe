@@ -33,7 +33,7 @@ public class Blog {
 
     private Integer numLike;
 
-    private Integer numView;
+    private Integer numComment;
 
     private Boolean actived = false;
 

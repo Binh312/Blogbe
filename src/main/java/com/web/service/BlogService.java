@@ -64,7 +64,7 @@ public class BlogService {
         blog.setCreatedTime(new Time(System.currentTimeMillis()));
         blog.setUser(user);
         blog.setNumLike(0);
-        blog.setNumView(0);
+        blog.setNumComment(0);
         if(user.getRole().equals(Contains.ROLE_ADMIN)){
             blog.setActived(true);
         }
@@ -118,8 +118,13 @@ public class BlogService {
         blog.setCreatedTime(blogExist.get().getCreatedTime());
         blog.setUser(blogExist.get().getUser());
         blog.setNumLike(blogExist.get().getNumLike());
-        blog.setNumView(blogExist.get().getNumView());
-        blog.setActived(blogExist.get().getActived());
+        blog.setNumComment(blogExist.get().getNumComment());
+        if (blogExist.get().getUser().getId() == user.getId() && !user.getRole().equals(Contains.ROLE_ADMIN)
+                && !user.getRole().equals(Contains.ROLE_BLOG_MANAGER)){
+            blog.setActived(false);
+        } else {
+            blog.setActived(blogExist.get().getActived());
+        }
         Blog result = blogRepository.save(blog);
 
         blogCategoryRepository.deleteByBlog(result.getId());
@@ -176,6 +181,11 @@ public class BlogService {
         }
 
         blogRepository.delete(blogOptional.get());
+    }
+
+    public Page<Blog> getBlogByUser(Long userId, Pageable pageable){
+        Page<Blog> page = blogRepository.getBlogByUser(userId,pageable);
+        return page;
     }
 
     public Page<Blog> getBlogActived(Pageable pageable){

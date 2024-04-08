@@ -77,4 +77,10 @@ public class BlogApi {
         ActiveStatus activeStatuse = blogService.activeOrUnactive(blogId);
         return new ResponseEntity<>(activeStatuse, HttpStatus.CREATED);
     }
+
+    @GetMapping("/all/get-blog-by-user")
+    public ResponseEntity<?> getBlogByUser(@RequestParam Long userId, Pageable pageable){
+        Page<Blog> page = blogService.getBlogByUser(userId,pageable);
+        return new ResponseEntity<>(page, HttpStatus.CREATED);
+    }
 }

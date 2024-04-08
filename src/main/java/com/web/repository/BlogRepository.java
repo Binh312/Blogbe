@@ -1,6 +1,7 @@
 package com.web.repository;
 
 import com.web.entity.Blog;
+import com.web.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +16,9 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
 
     @Query("select b from Blog b where b.id = ?1 and b.actived = true")
     Optional<Blog> getBlogById(Long id);
+
+    @Query("select b from Blog b where b.user.id = ?1")
+    Page<Blog> getBlogByUser(Long userId, Pageable pageable);
 
     @Query("select b from Blog b where b.actived = true")
     Page<Blog> getBlogActived(Pageable pageable);

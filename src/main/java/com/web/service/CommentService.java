@@ -77,10 +77,6 @@ public class CommentService {
             throw new MessageException("Không đủ quyền");
         }
 
-//        if (userUtils.getUserWithAuthority().getId() != comment.get().getUser().getId() &&
-//                userUtils.getUserWithAuthority().getRole().equals(Contains.ROLE_USER)) {
-//            throw new MessageException("Người dùng không đủ quyền");
-//        }
         commentRepository.delete(comment.get());
     }
 
