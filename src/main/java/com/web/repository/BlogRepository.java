@@ -17,10 +17,10 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
     @Query("select b from Blog b where b.id = ?1 and b.actived = true")
     Optional<Blog> getBlogById(Long id);
 
-    @Query("select b from Blog b where b.user.id = ?1")
+    @Query("select b from Blog b where b.user.id = ?1 order by b.createdDate desc")
     Page<Blog> getBlogByUser(Long userId, Pageable pageable);
 
-    @Query("select b from Blog b where b.actived = true")
+    @Query("select b from Blog b where b.actived = true order by b.createdTime desc")
     Page<Blog> getBlogActived(Pageable pageable);
 
     @Query("select b from Blog b where b.title = ?1 and b.actived = true")
