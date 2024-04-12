@@ -127,4 +127,12 @@ public class UserService {
         user.setPassword(userOptional.get().getPassword());
         return userRepository.save(user);
     }
+
+    public User findUserById(Long id){
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            throw new MessageException("User không tồn tại");
+        }
+        return user.get();
+    }
 }

@@ -84,4 +84,10 @@ public class UserApi {
         User us = userService.updateByAdmin(user);
         return new ResponseEntity<>(us, HttpStatus.CREATED);
     }
+
+    @GetMapping("/all/find-user-by-id")
+    public ResponseEntity<?> findUserById(@RequestParam Long id){
+        User user = userService.findUserById(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 }
