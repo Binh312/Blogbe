@@ -140,7 +140,7 @@ public class UserService {
         if(passwordEncoder.matches(user.getPassword(), userOptional.get().getPassword()) == false){
             if (user.getPassword().length() < 5){
                 if (passwordEncoder.matches(user.getPassword(), userOptional.get().getPassword()) == true
-                || user.getPassword().isEmpty()) {
+                || user.getPassword().isEmpty() || user.getPassword() == null || user.getPassword().contains("")) {
                     user.setPassword(userOptional.get().getPassword());
                 } else {
                     throw new MessageException("Mật khẩu không được ít hơn 5 ký tự");
