@@ -137,15 +137,27 @@ public class UserService {
             throw new MessageException("Tên tài khoản đã tồn tại");
         }
 
-        if(passwordEncoder.matches(user.getPassword(), userOptional.get().getPassword()) == false){
+        if(passwordEncoder.matches(user.getPassword(), userOptional.get().getPassword()) == false
+                && user.getPassword().length() < 5){
+            if (user.getPassword().isEmpty()) {
+                user.setPassword(userOptional.get().getPassword());
+            } else {
+                throw new MessageException("Mật khẩu không được ít hơn 5 ký tự");
+            }
+        } if (passwordEncoder.matches(user.getPassword(), userOptional.get().getPassword()) == false) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
+        if (!user.getAvatar().equals(userOptional.get().getAvatar())){
+            user.setAvatar(user.getAvatar());
+        } if (user.getAvatar().isEmpty()) {
+            user.setAvatar(userOptional.get().getAvatar());
         } else {
-            user.setPassword(userOptional.get().getPassword());
+            user.setAvatar(userOptional.get().getAvatar());
         }
 
         user.setCreatedDate(userOptional.get().getCreatedDate());
         user.setRole(userOptional.get().getRole());
-        user.setAvatar(userOptional.get().getAvatar());
         user.setActived(userOptional.get().getActived());
         return userRepository.save(user);
     }
