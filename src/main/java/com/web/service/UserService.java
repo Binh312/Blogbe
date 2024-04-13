@@ -152,7 +152,7 @@ public class UserService {
 
         if (!user.getAvatar().equals(userOptional.get().getAvatar())){
             user.setAvatar(user.getAvatar());
-        } if (user.getAvatar().isEmpty()) {
+        } if (user.getAvatar().isEmpty() || user.getAvatar() == null) {
             user.setAvatar(userOptional.get().getAvatar());
         }
 
