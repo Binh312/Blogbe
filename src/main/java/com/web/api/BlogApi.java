@@ -61,6 +61,12 @@ public class BlogApi {
         return new ResponseEntity<>(page, HttpStatus.CREATED);
     }
 
+    @GetMapping("/public/get-all-blog-unactived")
+    public ResponseEntity<?> getBlogUnActived(Pageable pageable){
+        Page<Blog> page = blogService.getBlogUnActived(pageable);
+        return new ResponseEntity<>(page, HttpStatus.CREATED);
+    }
+
     @GetMapping("/public/search-blog")
     public ResponseEntity<?> searchBlog(@RequestParam String search, Pageable pageable){
         Page<Blog> page = blogService.searchBlog(search,pageable);

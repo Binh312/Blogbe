@@ -195,6 +195,11 @@ public class BlogService {
         return page;
     }
 
+    public Page<Blog> getBlogUnActived(Pageable pageable){
+        Page<Blog> page = blogRepository.getBlogUnActived(pageable);
+        return page;
+    }
+
     public Page<Blog> searchBlog(String search, Pageable pageable){
         Page<Blog> page = blogRepository.searchBlog(search,pageable);
         return page;

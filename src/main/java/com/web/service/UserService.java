@@ -152,8 +152,6 @@ public class UserService {
             user.setAvatar(user.getAvatar());
         } if (user.getAvatar().isEmpty()) {
             user.setAvatar(userOptional.get().getAvatar());
-        } else {
-            user.setAvatar(userOptional.get().getAvatar());
         }
 
         user.setCreatedDate(userOptional.get().getCreatedDate());
