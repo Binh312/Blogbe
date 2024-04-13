@@ -145,6 +145,8 @@ public class UserService {
                 } else {
                     throw new MessageException("Mật khẩu không được ít hơn 5 ký tự");
                 }
+            } else if (user.getPassword().contains(" ")) {
+                throw new MessageException("Mật khẩu không được để ký tự space");
             } else {
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
             }
