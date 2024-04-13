@@ -137,15 +137,16 @@ public class UserService {
             throw new MessageException("Tên tài khoản đã tồn tại");
         }
 
-        if(passwordEncoder.matches(user.getPassword(), userOptional.get().getPassword()) == false
-                && user.getPassword().length() < 5){
-            if (user.getPassword().isEmpty()) {
-                user.setPassword(userOptional.get().getPassword());
+        if(passwordEncoder.matches(user.getPassword(), userOptional.get().getPassword()) == false){
+            if (user.getPassword().length() < 5){
+                if (user.getPassword().isEmpty()) {
+                    user.setPassword(userOptional.get().getPassword());
+                } else {
+                    throw new MessageException("Mật khẩu không được ít hơn 5 ký tự");
+                }
             } else {
-                throw new MessageException("Mật khẩu không được ít hơn 5 ký tự");
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
             }
-        } if (passwordEncoder.matches(user.getPassword(), userOptional.get().getPassword()) == false) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
         if (!user.getAvatar().equals(userOptional.get().getAvatar())){
