@@ -57,6 +57,8 @@ public class CommentService {
             comment.setParentComment(parentComment.get());
             comment.setUsernameReciver(parentComment.get().getUser().getUsername());
         }
+        blog.get().setNumComment(blog.get().getNumComment() + 1);
+        blogRepository.save(blog.get());
         commentRepository.save(comment);
         return comment;
     }

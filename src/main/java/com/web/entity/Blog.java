@@ -31,9 +31,9 @@ public class Blog {
 
     private Time createdTime;
 
-    private Integer numLike = 0;
+    private Integer numLike;
 
-    private Integer numComment = 0;
+    private Integer numComment;
 
     private Boolean actived = false;
 
