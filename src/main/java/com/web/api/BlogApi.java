@@ -45,13 +45,14 @@ public class BlogApi {
 
     @GetMapping("/blog-manager/find-all")
     public ResponseEntity<?> findAll(Pageable pageable){
-        Page<Blog> blog = blogService.findAll(pageable);
+        Page<Blog> blog = blogService.findAllBlog(pageable);
         return new ResponseEntity<>(blog, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/all/delete")
-    public void delete(@RequestParam Long blogID){
-        blogService.deleteBlog(blogID);
+    public ResponseEntity<?> delete(@RequestParam Long blogId){
+        String mess = blogService.deleteBlog(blogId);
+        return new ResponseEntity<>(mess, HttpStatus.OK);
     }
 
     @GetMapping("/public/get-all-blog")

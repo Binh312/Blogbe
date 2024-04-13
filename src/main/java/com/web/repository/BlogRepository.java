@@ -23,6 +23,9 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
     @Query("select b from Blog b where b.actived = true order by b.createdTime desc")
     Page<Blog> getBlogActived(Pageable pageable);
 
+    @Query("select b from Blog b order by b.createdTime desc")
+    Page<Blog> findAllBlog(Pageable pageable);
+
     @Query("select b from Blog b where b.title = ?1 and b.actived = true")
     Page<Blog> searchBlog(String search, Pageable pageable);
 

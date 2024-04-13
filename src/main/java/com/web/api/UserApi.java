@@ -66,10 +66,11 @@ public class UserApi {
 
     @PostMapping("/update-infor")
     public ResponseEntity<?> updateInfor(@RequestBody User user){
-        User us = userUtils.getUserWithAuthority();
-        us.setFullName(user.getFullName());
-        us.setAvatar(user.getAvatar());
-        User result = userRepository.save(us);
+        User result = userService.updateInfor(user);
+//        User us = userUtils.getUserWithAuthority();
+//        us.setFullName(user.getFullName());
+//        us.setAvatar(user.getAvatar());
+//        User result = userRepository.save(us);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 

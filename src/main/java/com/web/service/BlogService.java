@@ -162,11 +162,12 @@ public class BlogService {
         return blog.get();
     }
 
-    public Page<Blog> findAll(Pageable pageable){
-        return blogRepository.findAll(pageable);
+    public Page<Blog> findAllBlog(Pageable pageable){
+        Page<Blog> page = blogRepository.findAllBlog(pageable);
+        return page;
     }
 
-    public void deleteBlog(Long blogId){
+    public String deleteBlog(Long blogId){
         Optional<Blog> blogOptional = blogRepository.findById(blogId);
         if(blogOptional.isEmpty()){
             throw new MessageException("blog id không tồn tại!");
@@ -181,6 +182,7 @@ public class BlogService {
         }
 
         blogRepository.delete(blogOptional.get());
+        return "Đã xóa bài viết thành công";
     }
 
     public Page<Blog> getBlogByUser(Long userId, Pageable pageable){

@@ -128,6 +128,28 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User updateInfor(User user){
+        Optional<User> userOptional = userRepository.findById(user.getId());
+        if (userOptional.isEmpty()){
+            throw new MessageException("Tài khoản không tồn tại");
+        }
+        if (userRepository.findByUsernameAndId(user.getUsername(), user.getId()).isPresent()) {
+            throw new MessageException("Tên tài khoản đã tồn tại");
+        }
+
+        if(passwordEncoder.matches(user.getPassword(), userOptional.get().getPassword()) == false){
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        } else {
+            user.setPassword(userOptional.get().getPassword());
+        }
+
+        user.setCreatedDate(userOptional.get().getCreatedDate());
+        user.setRole(userOptional.get().getRole());
+        user.setAvatar(userOptional.get().getAvatar());
+        user.setActived(userOptional.get().getActived());
+        return userRepository.save(user);
+    }
+
     public User findUserById(Long id){
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()) {
