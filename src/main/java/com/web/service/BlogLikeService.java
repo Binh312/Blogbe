@@ -32,7 +32,7 @@ public class BlogLikeService {
         }
         User user = userUtils.getUserWithAuthority();
         Optional<BlogLike> blogLike = blogLikeRepository.findByUserAndBlog(user.getId(), blogId);
-        if(blog.isPresent()){
+        if(blogLike.isPresent()){
             return;
         }
         BlogLike b = new BlogLike();

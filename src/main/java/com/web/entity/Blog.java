@@ -2,6 +2,8 @@ package com.web.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -46,4 +48,7 @@ public class Blog {
 
     @OneToMany(mappedBy = "blog", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<BlogFile> blogFiles;
+
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private Set<BlogLike> blogLikes;
 }
