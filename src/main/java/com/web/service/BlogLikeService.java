@@ -25,7 +25,7 @@ public class BlogLikeService {
     @Autowired
     private UserUtils userUtils;
 
-    public void save(Long blogId){
+    public Boolean likeOrUnlike(Long blogId){
         Optional<Blog> blog = blogRepository.findById(blogId);
         if(blog.isEmpty()){
             throw new MessageException("not found blog");
@@ -33,7 +33,10 @@ public class BlogLikeService {
         User user = userUtils.getUserWithAuthority();
         Optional<BlogLike> blogLike = blogLikeRepository.findByUserAndBlog(user.getId(), blogId);
         if(blogLike.isPresent()){
-            return;
+            blog.get().setNumLike(blog.get().getNumLike() - 1);
+            blogRepository.save(blog.get());
+            blogLikeRepository.deleteById(blogLike.get().getId());
+            return false;
         }
         BlogLike b = new BlogLike();
         b.setBlog(blog.get());
@@ -41,19 +44,7 @@ public class BlogLikeService {
         blogLikeRepository.save(b);
         blog.get().setNumLike(blog.get().getNumLike() + 1);
         blogRepository.save(blog.get());
-    }
-
-    public void unlike(Long id){
-        Optional<BlogLike> blogLike = blogLikeRepository.findById(id);
-        if(blogLike.isEmpty()){
-            throw new MessageException("not found blog like");
-        }
-        if(blogLike.get().getUser().getId() != userUtils.getUserWithAuthority().getId()){
-            throw new MessageException("Access denied");
-        }
-        blogLike.get().getBlog().setNumLike( blogLike.get().getBlog().getNumLike() - 1 );
-        blogRepository.save(blogLike.get().getBlog());
-        blogLikeRepository.deleteById(id);
+        return true;
     }
 
     public List<BlogLike> findByBlog(Long blogId){
