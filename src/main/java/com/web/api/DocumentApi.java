@@ -72,4 +72,22 @@ public class DocumentApi {
         ActiveStatus activeStatuse = documentService.activeOrUnactive(documentId);
         return new ResponseEntity<>(activeStatuse, HttpStatus.CREATED);
     }
+
+    @GetMapping("/public/get-document-by-department")
+    public ResponseEntity<?> getDocumentByDepartment(@RequestParam Long departmentId,Pageable pageable){
+        Page<Document> documentPage = documentService.getDocumentByDepartment(departmentId,pageable);
+        return new ResponseEntity<>(documentPage, HttpStatus.OK);
+    }
+
+    @GetMapping("/public/get-document-by-specialize")
+    public ResponseEntity<?> getDocumentBySpecialize(@RequestParam Long specializeId,Pageable pageable){
+        Page<Document> documentPage = documentService.getDocumentBySpecialize(specializeId,pageable);
+        return new ResponseEntity<>(documentPage, HttpStatus.OK);
+    }
+
+    @GetMapping("/public/get-document-by-subject")
+    public ResponseEntity<?> getDocumentBySubject(@RequestParam Long subjectId,Pageable pageable){
+        Page<Document> documentPage = documentService.getDocumentBySubject(subjectId,pageable);
+        return new ResponseEntity<>(documentPage, HttpStatus.OK);
+    }
 }

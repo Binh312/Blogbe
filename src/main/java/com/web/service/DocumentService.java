@@ -173,6 +173,11 @@ public class DocumentService {
         return documentPage;
     }
 
+    public Page<Document> getDocumentUnactived(Pageable pageable){
+        Page<Document> documentPage = documentRepository.getDocumentUnactived(pageable);
+        return documentPage;
+    }
+
     public Page<Document> searchDocumentByName(String name, Pageable pageable){
         Page<Document> documentPage = documentRepository.searchDocumentByName(name,pageable);
         return documentPage;
@@ -197,5 +202,20 @@ public class DocumentService {
             documentRepository.save(document.get());
             return ActiveStatus.DA_MO_KHOA;
         }
+    }
+
+    public Page<Document> getDocumentBySubject(Long subjectId, Pageable pageable){
+        Page<Document> documentPage = documentRepository.getDocumentBySubject(subjectId,pageable);
+        return documentPage;
+    }
+
+    public Page<Document> getDocumentByDepartment(Long departmentId, Pageable pageable){
+        Page<Document> documentPage = documentRepository.getDocumentByDepartment(departmentId,pageable);
+        return documentPage;
+    }
+
+    public Page<Document> getDocumentBySpecialize(Long specializeId, Pageable pageable){
+        Page<Document> documentPage = documentRepository.getDocumentBySpecialize(specializeId,pageable);
+        return documentPage;
     }
 }

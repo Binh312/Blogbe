@@ -11,14 +11,31 @@ import org.springframework.stereotype.Repository;
 public interface DocumentRepository extends JpaRepository<Document, Long> {
 
     @Query("select d from Document d")
-    public Page<Document> findAll(Pageable pageable);
+    Page<Document> findAll(Pageable pageable);
 
     @Query("select d from Document d where d.actived = true")
-    public Page<Document> getDocumentActived(Pageable pageable);
+    Page<Document> getDocumentActived(Pageable pageable);
+
+    @Query("select d from Document d where d.actived = false ")
+    Page<Document> getDocumentUnactived(Pageable pageable);
 
     @Query("select d from Document d where d.name = ?1 and d.actived = true")
-    public Page<Document> searchDocumentByName(String name, Pageable pageable);
+    Page<Document> searchDocumentByName(String name, Pageable pageable);
 
     @Query("select d from DocumentCategory d where d.category.id = ?1 and d.document.actived = true")
-    public Page<Document> getDocumentByCategory(Long categoryId, Pageable pageable);
+    Page<Document> getDocumentByCategory(Long categoryId, Pageable pageable);
+
+    @Query("select d from Document d where d.subject.id = ?1 and d.actived = true")
+    Page<Document> getDocumentBySubject(Long subjectId, Pageable pageable);
+
+    @Query("select d from Document d " +
+            "join Subject sbj on d.subject.id = sbj.id " +
+            "join Specialize s on sbj.specialize.id = s.id " +
+            "join Department dp on s.department.id = dp.id where dp.id = ?1 and d.actived = true")
+    Page<Document> getDocumentByDepartment(Long departmentId, Pageable pageable);
+
+    @Query("select d from Document d " +
+            "join Subject sbj on d.subject.id = sbj.id " +
+            "join Specialize s on sbj.specialize.id = s.id where s.id = ?1 and d.actived = true")
+    Page<Document> getDocumentBySpecialize(Long specializeId, Pageable pageable);
 }
