@@ -30,8 +30,6 @@ public class Document {
 
     private String image;
 
-    private Integer numView;
-
     private Integer numDownload;
 
     private String description;

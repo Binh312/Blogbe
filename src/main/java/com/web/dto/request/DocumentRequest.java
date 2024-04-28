@@ -1,5 +1,6 @@
 package com.web.dto.request;
 
+import com.web.entity.Subject;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,8 @@ public class DocumentRequest {
     private String image;
 
     private String description;
+
+    private Long subjectId;
 
     private List<Long> listCategoryId = new ArrayList<>();
 

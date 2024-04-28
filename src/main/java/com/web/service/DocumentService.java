@@ -5,10 +5,7 @@ import com.web.dto.request.FileDto;
 import com.web.entity.*;
 import com.web.enums.ActiveStatus;
 import com.web.exception.MessageException;
-import com.web.repository.CategoryRepository;
-import com.web.repository.DocumentCategoryRepository;
-import com.web.repository.DocumentFileRepository;
-import com.web.repository.DocumentRepository;
+import com.web.repository.*;
 import com.web.utils.Contains;
 import com.web.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +35,16 @@ public class DocumentService {
     private UserUtils userUtils;
 
     @Autowired
+    private SubjectRepository subjectRepository;
+
+    @Autowired
     private DocumentCategoryRepository documentCategoryRepository;
 
     public Document save(DocumentRequest request){
+        Optional<Subject> subjectOptional = subjectRepository.findById(request.getSubjectId());
+        if (subjectOptional.isEmpty()){
+            throw new MessageException("Môn học không tồn tại");
+        }
         List<Category> categories = new ArrayList<>();
         for (long id : request.getListCategoryId()){
             Optional<Category> category = categoryRepository.findById(id);
@@ -59,11 +63,11 @@ public class DocumentService {
         document.setCreatedDate(new Date(System.currentTimeMillis()));
         document.setCreatedTime(new Time(System.currentTimeMillis()));
         document.setUser(user);
-        document.setNumView(0);
         document.setImage(request.getImage());
         document.setDescription(request.getDescription());
         document.setNumDownload(0);
         document.setName(request.getName());
+        document.setSubject(subjectOptional.get());
         if(user.getRole().equals(Contains.ROLE_ADMIN)){
             document.setActived(true);
         }
