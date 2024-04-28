@@ -23,4 +23,9 @@ public class SubjectApi {
         return new ResponseEntity<>(subjects, HttpStatus.OK);
     }
 
+    @GetMapping("/public/get-subject-by-department-and-specialize")
+    public ResponseEntity<?> getSubjectByDepartmentAndSpecialize(@RequestParam  Long departmentId, Long specializeId){
+        List<Subject> subjects = subjectService.getSubjectByDepartmentAndSpecialize(departmentId,specializeId);
+        return new ResponseEntity<>(subjects, HttpStatus.OK);
+    }
 }
