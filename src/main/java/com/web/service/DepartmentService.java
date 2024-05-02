@@ -1,5 +1,6 @@
 package com.web.service;
 
+import com.web.dto.response.DepartmentResponse;
 import com.web.entity.Department;
 import com.web.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ public class DepartmentService {
     private DepartmentRepository departmentRepository;
 
     public List<Department> findAllDepartment(){
-        return departmentRepository.findAll();
+        return departmentRepository.getAllDepartment();
     }
 
 }

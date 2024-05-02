@@ -105,6 +105,10 @@ public class DocumentService {
         if (document.isEmpty()){
             throw new MessageException("Document không tồn tại");
         }
+        Optional<Subject> subjectOptional = subjectRepository.findById(request.getSubjectId());
+        if (subjectOptional.isEmpty()){
+            throw new MessageException("Môn học không tồn tại");
+        }
 
         List<Category> categories = new ArrayList<>();
         for (long categoryid : request.getListCategoryId()){
@@ -117,6 +121,7 @@ public class DocumentService {
         document.get().setName(request.getName());
         document.get().setDescription(request.getDescription());
         document.get().setImage(request.getImage());
+        document.get().setSubject(subjectOptional.get());
         documentRepository.save(document.get());
         documentCategoryRepository.deleteByDocument(document.get().getId());
 

@@ -38,6 +38,12 @@ public class DocumentApi {
         return new ResponseEntity<>(document, HttpStatus.CREATED);
     }
 
+    @GetMapping("/document-manager/get-document-unactived")
+    public ResponseEntity<?> getDocumentUnactived(Pageable pageable){
+        Page<Document> document = documentService.getDocumentUnactived(pageable);
+        return new ResponseEntity<>(document, HttpStatus.CREATED);
+    }
+
     @DeleteMapping("/all/delete")
     public void deleteDocument(@RequestParam Long documentId){
         documentService.delete(documentId);

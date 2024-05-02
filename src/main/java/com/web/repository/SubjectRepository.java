@@ -15,6 +15,9 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
     @Query("select sbj from Subject sbj")
     Page<Subject> getAllSubject(Pageable pageable);
 
+    @Query("select sbj from Subject sbj where sbj.nameSubject like ?1")
+    Page<Subject> findSubjectsByName(String nameSubject, Pageable pageable);
+
     @Query("select sbj from Subject sbj where sbj.specialize.id = ?1")
     Page<Subject> getSubjectsBySpecialize(Long specializeId, Pageable pageable);
 

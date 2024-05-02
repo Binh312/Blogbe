@@ -31,6 +31,10 @@ public class SubjectService {
         return subjectRepository.getAllSubject(pageable);
     }
 
+    public Page<Subject> findSubjectsByName(String nameSubject, Pageable pageable){
+        return subjectRepository.findSubjectsByName(nameSubject,pageable);
+    }
+
     public Page<Subject> getSubjectByDepartmentAndSpecialize(Long departmentId, Long specializeId, Pageable pageable){
         Optional<Department> departmentOptional = departmentRepository.findById(departmentId);
         Optional<Specialize> specializeOptional = specializeRepository.findById(specializeId);
