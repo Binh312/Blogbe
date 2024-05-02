@@ -8,6 +8,8 @@ import com.web.repository.DepartmentRepository;
 import com.web.repository.SpecializeRepository;
 import com.web.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,25 +27,21 @@ public class SubjectService {
     @Autowired
     private DepartmentRepository departmentRepository;
 
-    public List<Subject> getSubjectBySpecialize(Long specializeId){
-        Optional<Specialize> specializeOptional = specializeRepository.findById(specializeId);
-        if (specializeOptional.isEmpty()){
-            return null;
-        } else {
-            return subjectRepository.getSubjectsBySpecialize(specializeId);
-        }
+    public Page<Subject> getAllSubject(Pageable pageable){
+        return subjectRepository.getAllSubject(pageable);
     }
 
-    public List<Subject> getSubjectByDepartmentAndSpecialize(Long departmentId, Long specializeId){
+    public Page<Subject> getSubjectByDepartmentAndSpecialize(Long departmentId, Long specializeId, Pageable pageable){
         Optional<Department> departmentOptional = departmentRepository.findById(departmentId);
-        if (departmentOptional.isEmpty()){
-            throw new MessageException("Khoa không tồn tại");
-        }
         Optional<Specialize> specializeOptional = specializeRepository.findById(specializeId);
-        if (specializeOptional.isEmpty()){
-            throw new MessageException("Chuyên ngành không tồn tại");
+        if (departmentOptional.isEmpty() && specializeOptional.isEmpty()){
+            return subjectRepository.getAllSubject(pageable);
         }
-
-        return subjectRepository.getSubjectsByDepartmentAndSpecialize(departmentId,specializeId);
+        else if (departmentOptional.isPresent() && specializeOptional.isEmpty()) {
+            return subjectRepository.getSubjectsByDepartment(departmentId,pageable);
+        }
+        else {
+            return subjectRepository.getSubjectsByDepartmentAndSpecialize(departmentId,specializeId,pageable);
+        }
     }
 }
