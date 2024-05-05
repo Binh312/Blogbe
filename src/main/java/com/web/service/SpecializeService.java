@@ -22,7 +22,7 @@ public class SpecializeService {
     public List<Specialize> getSpecializeByDepartment(Long departmentId){
         Optional<Department> departmentOptional = departmentRepository.findById(departmentId);
         if (departmentOptional.isEmpty()){
-            return null;
+            return specializeRepository.getAllSpecialize();
         } else {
             return specializeRepository.getSpecializesByDepartment(departmentId);
         }

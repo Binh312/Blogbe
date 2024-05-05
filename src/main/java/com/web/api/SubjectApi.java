@@ -37,7 +37,9 @@ public class SubjectApi {
     }
 
     @GetMapping("/public/get-subject-by-department-and-specialize")
-    public ResponseEntity<?> getSubjectByDepartmentAndSpecialize(@RequestParam  Long departmentId, Long specializeId, Pageable pageable){
+    public ResponseEntity<?> getSubjectByDepartmentAndSpecialize(@RequestParam(required = false) Long departmentId,
+                                                                 @RequestParam(required = false) Long specializeId,
+                                                                 Pageable pageable){
         Page<Subject> subjects = subjectService.getSubjectByDepartmentAndSpecialize(departmentId,specializeId,pageable);
         Page<SubjectResponse> subjectResponses = subjects.map(SubjectResponse::converterSubjectToSubjectResponse);
         return new ResponseEntity<>(subjectResponses, HttpStatus.OK);

@@ -47,7 +47,7 @@ public class UserApi {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @GetMapping("/admin/all-user")
+    @GetMapping("/admin/find-user-by-role")
     public Page<User> findByRole(Pageable pageable, @RequestParam(value = "role", required = false) String role,
                                  @RequestParam(value = "search", required = false) String search){
         if(search == null){
@@ -67,10 +67,6 @@ public class UserApi {
     @PostMapping("/update-infor")
     public ResponseEntity<?> updateInfor(@RequestBody User user){
         User result = userService.updateInfor(user);
-//        User us = userUtils.getUserWithAuthority();
-//        us.setFullName(user.getFullName());
-//        us.setAvatar(user.getAvatar());
-//        User result = userRepository.save(us);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
@@ -90,5 +86,29 @@ public class UserApi {
     public ResponseEntity<?> findUserById(@RequestParam Long id){
         User user = userService.findUserById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("/admin/get-all-user")
+    public ResponseEntity<?> getAllUser(Pageable pageable){
+        Page<User> page = userService.getAllUser(pageable);
+        return new ResponseEntity<>(page, HttpStatus.OK);
+    }
+
+    @GetMapping("/admin/get-user-actived")
+    public ResponseEntity<?> getUserActived(Pageable pageable){
+        Page<User> page = userService.getUserActived(pageable);
+        return new ResponseEntity<>(page, HttpStatus.OK);
+    }
+
+    @GetMapping("/admin/get-user-unactived")
+    public ResponseEntity<?> getUserUnactived(Pageable pageable){
+        Page<User> page = userService.getUserUnactived(pageable);
+        return new ResponseEntity<>(page, HttpStatus.OK);
+    }
+
+    @GetMapping("/admin/search-by-name")
+    public ResponseEntity<?> searchByName(String name, Pageable pageable){
+        Page<User> page = userService.searchByName(name,pageable);
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 }

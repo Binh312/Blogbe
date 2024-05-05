@@ -26,12 +26,21 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
     @Query("select b from Blog b where b.actived = false order by b.createdTime desc")
     Page<Blog> getBlogUnActived(Pageable pageable);
 
-    @Query("select b from Blog b order by b.createdTime desc")
+    @Query("select b from Blog b order by  b.createdDate desc, b.createdTime desc")
     Page<Blog> findAllBlog(Pageable pageable);
 
-    @Query("select b from Blog b where b.title = ?1 and b.actived = true")
+    @Query("select b from Blog b where b.title like ?1 and b.actived = true")
     Page<Blog> searchBlog(String search, Pageable pageable);
 
     @Query("select b from BlogCategory b where b.category.id = ?1 and b.blog.actived = true")
     Page<Blog> getBlogByCategory(Long CategoryId, Pageable pageable);
+
+    @Query("select b from Blog b where b.title like ?1")
+    Page<Blog> adminSearchBlogByTitle(String search, Pageable pageable);
+
+    @Query("select b from Blog b where b.description like ?1")
+    Page<Blog> adminSearchBlogByDescription(String search, Pageable pageable);
+
+    @Query("select b from Blog b where b.user.username like ?1")
+    Page<Blog> adminSearchBlogByUsernamen(String search, Pageable pageable);
 }

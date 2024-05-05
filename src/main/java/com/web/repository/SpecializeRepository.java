@@ -12,4 +12,7 @@ public interface SpecializeRepository extends JpaRepository<Specialize, Long> {
 
     @Query("select s from Specialize s where s.department.id = ?1")
     List<Specialize> getSpecializesByDepartment(Long departmentId);
+
+    @Query("select s from Specialize s")
+    List<Specialize> getAllSpecialize();
 }

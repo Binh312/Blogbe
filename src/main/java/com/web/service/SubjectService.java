@@ -38,6 +38,7 @@ public class SubjectService {
     public Page<Subject> getSubjectByDepartmentAndSpecialize(Long departmentId, Long specializeId, Pageable pageable){
         Optional<Department> departmentOptional = departmentRepository.findById(departmentId);
         Optional<Specialize> specializeOptional = specializeRepository.findById(specializeId);
+
         if (departmentOptional.isEmpty() && specializeOptional.isEmpty()){
             return subjectRepository.getAllSubject(pageable);
         }

@@ -171,4 +171,20 @@ public class UserService {
         }
         return user.get();
     }
+
+    public Page<User> getAllUser(Pageable pageable){
+        return userRepository.getAllUser(pageable);
+    }
+
+    public Page<User> getUserActived(Pageable pageable){
+        return userRepository.getUserActived(pageable);
+    }
+
+    public Page<User> getUserUnactived(Pageable pageable){
+        return userRepository.getUserUnactived(pageable);
+    }
+
+    public Page<User> searchByName(String userName, Pageable pageable){
+        return userRepository.searchByName(userName,pageable);
+    }
 }

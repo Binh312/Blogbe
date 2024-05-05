@@ -27,12 +27,20 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query(value = "select u.* from users u where u.id = ?1", nativeQuery = true)
     Optional<User> findById(Long id);
 
+    @Query("select u from User u")
+    Page<User> getAllUser(Pageable pageable);
+
+    @Query("select u from User u where u.actived = true")
+    Page<User> getUserActived(Pageable pageable);
+
+    @Query("select u from User u where u.actived = false")
+    Page<User> getUserUnactived(Pageable pageable);
+
     @Query("select u from User u where u.role = ?1")
     public List<User> getUserByRole(String role);
 
-
     @Query("select u from User u where u.username like ?1 or u.fullName like ?1")
-    public Set<User> searchByParam(String param);
+    Page<User> searchByName(String userName, Pageable pageable);
 
     @Query(value = "select u.* from chat c inner join users u\n" +
             "where (c.sender = ?1 or c.receiver = ?1) and u.id != ?1 group by u.id", nativeQuery = true)
