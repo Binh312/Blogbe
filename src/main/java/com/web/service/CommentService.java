@@ -63,7 +63,7 @@ public class CommentService {
         return comment;
     }
 
-    public void delete(Long id){
+    public String delete(Long id){
         Optional<Comment> comment = commentRepository.findById(id);
         if (comment.isEmpty()) {
             throw new MessageException("Comment không tồn tại");
@@ -79,7 +79,11 @@ public class CommentService {
             throw new MessageException("Không đủ quyền");
         }
 
+        Optional<Blog> blog = blogRepository.findById(comment.get().getBlog().getId());
+        blog.get().setNumComment(blog.get().getNumComment() - 1);
+        blogRepository.save(blog.get());
         commentRepository.delete(comment.get());
+        return "Đã xoá comment thành công";
     }
 
     public Page<Comment> findByBlog(Pageable pageable, Long blogId){

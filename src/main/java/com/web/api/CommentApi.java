@@ -31,7 +31,8 @@ public class CommentApi {
     }
 
     @DeleteMapping("/all/delete")
-    public void delete(@RequestParam Long id){
-        commentService.delete(id);
+    public ResponseEntity<?> delete(@RequestParam Long id){
+        String mess = commentService.delete(id);
+        return new ResponseEntity<>(mess, HttpStatus.OK);
     }
 }
