@@ -67,9 +67,9 @@ public class BlogApi {
         return new ResponseEntity<>(page, HttpStatus.CREATED);
     }
 
-    @GetMapping("/public/search-blog")
-    public ResponseEntity<?> searchBlog(@RequestParam String search, Pageable pageable){
-        Page<Blog> page = blogService.searchBlog(search,pageable);
+    @GetMapping("/public/search-blog-by-title")
+    public ResponseEntity<?> searchBlogByTitle(@RequestParam String searchTitle, Pageable pageable){
+        Page<Blog> page = blogService.searchBlogByTitle(searchTitle,pageable);
         return new ResponseEntity<>(page, HttpStatus.CREATED);
     }
 

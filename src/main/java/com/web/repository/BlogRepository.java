@@ -30,7 +30,7 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
     Page<Blog> findAllBlog(Pageable pageable);
 
     @Query("select b from Blog b where b.title like ?1 and b.actived = true")
-    Page<Blog> searchBlog(String search, Pageable pageable);
+    Page<Blog> searchBlogByTitle(String searchTitle, Pageable pageable);
 
     @Query("select b from BlogCategory b where b.category.id = ?1 and b.blog.actived = true")
     Page<Blog> getBlogByCategory(Long CategoryId, Pageable pageable);

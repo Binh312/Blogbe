@@ -32,54 +32,69 @@ public class NotificationService {
     @Autowired
     private NotificationFileRepository notificationFileRepository;
 
-    public Notification addNewNotification(NotificationRequest request){
-        Notification notification = notificationMapper.convertRequestToNotification(request);
-        notification.setCreatedDate(new Date(System.currentTimeMillis()));
-        notification.setCreatedTime(new Time(System.currentTimeMillis()));
+    public Notification saveAndUpdateNotification(NotificationRequest request){
+        if (request.getId() == null){
+            Notification notification = notificationMapper.convertRequestToNotification(request);
+            notification.setCreatedDate(new Date(System.currentTimeMillis()));
+            notification.setCreatedTime(new Time(System.currentTimeMillis()));
 
-        Notification result = notificationRepository.save(notification);
+            Notification result = notificationRepository.save(notification);
 
-        List<NotificationFile> notificationFiles = new ArrayList<>();
-        for (FileDto FileDto : request.getLinkFiles()) {
-            NotificationFile notificationFile = new NotificationFile();
-            notificationFile.setNotification(result);
-            notificationFile.setLinkFile(FileDto.getLinkFile());
-            notificationFile.setFileName(FileDto.getFileName());
-            notificationFile.setFileSize(FileDto.getFileSize());
-            notificationFile.setFileType(FileDto.getTypeFile());
-            notificationFiles.add(notificationFile);
+            List<NotificationFile> notificationFiles = new ArrayList<>();
+            for (FileDto FileDto : request.getLinkFiles()) {
+                NotificationFile notificationFile = new NotificationFile();
+                notificationFile.setNotification(result);
+                notificationFile.setLinkFile(FileDto.getLinkFile());
+                notificationFile.setFileName(FileDto.getFileName());
+                notificationFile.setFileSize(FileDto.getFileSize());
+                notificationFile.setFileType(FileDto.getTypeFile());
+                notificationFiles.add(notificationFile);
+            }
+            notificationFileRepository.saveAll(notificationFiles);
+
+            return result;
+        } else {
+            Optional<Notification> notificationOptional = notificationRepository.findById(request.getId());
+            if (notificationOptional.isEmpty()) {
+                throw new MessageException("Thông báo không tồn tại");
+            }
+            notificationOptional.get().setCreatedDate(new Date(System.currentTimeMillis()));
+            notificationOptional.get().setCreatedTime(new Time(System.currentTimeMillis()));
+
+            if (request.getTitle() == null || request.getTitle().equals(notificationOptional.get().getTitle())){
+                notificationOptional.get().setTitle(notificationOptional.get().getTitle());
+            } else {
+                notificationOptional.get().setTitle(request.getTitle());
+            }
+
+            if (request.getImage() == null || request.getImage().equals(notificationOptional.get().getImage())){
+                notificationOptional.get().setImage(notificationOptional.get().getImage());
+            } else {
+                notificationOptional.get().setImage(request.getImage());
+            }
+
+            if (request.getContent() == null || request.getContent().equals(notificationOptional.get().getContent())){
+                notificationOptional.get().setContent(notificationOptional.get().getContent());
+            } else {
+                notificationOptional.get().setContent(request.getContent());
+            }
+
+            Notification result = notificationRepository.save(notificationOptional.get());
+
+            List<NotificationFile> notificationFiles = new ArrayList<>();
+            for (FileDto FileDto : request.getLinkFiles()) {
+                NotificationFile notificationFile = new NotificationFile();
+                notificationFile.setNotification(result);
+                notificationFile.setLinkFile(FileDto.getLinkFile());
+                notificationFile.setFileName(FileDto.getFileName());
+                notificationFile.setFileSize(FileDto.getFileSize());
+                notificationFile.setFileType(FileDto.getTypeFile());
+                notificationFiles.add(notificationFile);
+            }
+            notificationFileRepository.saveAll(notificationFiles);
+
+            return result;
         }
-        notificationFileRepository.saveAll(notificationFiles);
-
-        return result;
-    }
-
-    public Notification updateNotification(NotificationRequest request){
-        Optional<Notification> notificationOptional = notificationRepository.findById(request.getId());
-        if (notificationOptional.isEmpty()){
-            throw new MessageException("Thông báo không tồn tại");
-        }
-
-        Notification notification = notificationMapper.convertRequestToNotification(request);
-        notification.setCreatedDate(new Date(System.currentTimeMillis()));
-        notification.setCreatedTime(new Time(System.currentTimeMillis()));
-
-        Notification result = notificationRepository.save(notification);
-
-        notificationFileRepository.deleteByNotification(request.getId());
-        List<NotificationFile> notificationFiles = new ArrayList<>();
-        for (FileDto FileDto : request.getLinkFiles()) {
-            NotificationFile notificationFile = new NotificationFile();
-            notificationFile.setNotification(result);
-            notificationFile.setLinkFile(FileDto.getLinkFile());
-            notificationFile.setFileName(FileDto.getFileName());
-            notificationFile.setFileSize(FileDto.getFileSize());
-            notificationFile.setFileType(FileDto.getTypeFile());
-            notificationFiles.add(notificationFile);
-        }
-        notificationFileRepository.saveAll(notificationFiles);
-
-        return result;
     }
 
     public String deleteNotification(Long notificationId){

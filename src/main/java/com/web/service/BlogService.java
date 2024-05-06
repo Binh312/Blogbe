@@ -200,8 +200,8 @@ public class BlogService {
         return page;
     }
 
-    public Page<Blog> searchBlog(String search, Pageable pageable){
-        Page<Blog> page = blogRepository.searchBlog(search,pageable);
+    public Page<Blog> searchBlogByTitle(String searchTitle, Pageable pageable){
+        Page<Blog> page = blogRepository.searchBlogByTitle(searchTitle,pageable);
         return page;
     }
 

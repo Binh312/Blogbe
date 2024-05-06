@@ -1,8 +1,7 @@
 package com.web.api;
 
-import com.web.dto.request.BlogRequest;
-import com.web.entity.Blog;
 import com.web.service.MailService;
+import com.web.utils.RandomKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +15,14 @@ public class MailApi {
     @Autowired
     private MailService mailService;
 
-    @PostMapping("/public/send-mail")
-    public ResponseEntity<?> saveOrUpdate(){
-        mailService.sendSimpleMessage("tuantatuan222@gmail.com","Test mail","don't have text");
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @PostMapping("/send-mail")
+    public ResponseEntity<String> sendMail(@RequestParam("to") String to) {
+
+        String randomKey = RandomKey.genKey();
+        String subject = "Random Key";
+        String message = "random key : " + randomKey;
+        mailService.sendSimpleMessage(to, subject, message);
+
+        return ResponseEntity.ok("hay kiem tra gmail cua ban.");
     }
 }

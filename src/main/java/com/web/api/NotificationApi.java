@@ -18,15 +18,9 @@ public class NotificationApi {
     @Autowired
     private NotificationService notificationService;
 
-    @PostMapping("/admin/add-new-notification")
-    public ResponseEntity<?> addNewNotification(@RequestBody NotificationRequest notificationRequest){
-        Notification notification = notificationService.addNewNotification(notificationRequest);
-        return new ResponseEntity<>(notification, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/admin/update-notification")
-    public ResponseEntity<?> updateNotification(@RequestBody NotificationRequest notificationRequest){
-        Notification notification = notificationService.updateNotification(notificationRequest);
+    @PostMapping("/admin/add-and-update-notification")
+    public ResponseEntity<?> saveAndUpdateNotification(@RequestBody NotificationRequest notificationRequest){
+        Notification notification = notificationService.saveAndUpdateNotification(notificationRequest);
         return new ResponseEntity<>(notification, HttpStatus.CREATED);
     }
 
