@@ -200,9 +200,12 @@ public class BlogService {
         return page;
     }
 
-    public Page<Blog> searchBlogByTitle(String searchTitle, Pageable pageable){
-        Page<Blog> page = blogRepository.searchBlogByTitle(searchTitle,pageable);
-        return page;
+    public Page<Blog> searchBlogActivedByTitle(String searchTitle, Pageable pageable){
+        if (searchTitle.isEmpty()) {
+            return blogRepository.getBlogActived(pageable);
+        } else {
+            return blogRepository.searchBlogActivedByTitle(searchTitle,pageable);
+        }
     }
 
     public Page<Blog> getBlogByCategory(Long categoryId, Pageable pageable){
@@ -223,6 +226,14 @@ public class BlogService {
             blog.get().setActived(true);
             blogRepository.save(blog.get());
             return ActiveStatus.DA_MO_KHOA;
+        }
+    }
+
+    public Page<Blog> adminSearchBlogByTitle(String searchTitle, Pageable pageable){
+        if (searchTitle.isEmpty()){
+            return blogRepository.findAllBlog(pageable);
+        } else {
+            return blogRepository.adminSearchBlogByTitle(searchTitle,pageable);
         }
     }
 }

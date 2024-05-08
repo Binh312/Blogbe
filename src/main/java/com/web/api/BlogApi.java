@@ -67,9 +67,9 @@ public class BlogApi {
         return new ResponseEntity<>(page, HttpStatus.CREATED);
     }
 
-    @GetMapping("/public/search-blog-by-title")
+    @GetMapping("/public/search-blog-actived-by-title")
     public ResponseEntity<?> searchBlogByTitle(@RequestParam String searchTitle, Pageable pageable){
-        Page<Blog> page = blogService.searchBlogByTitle(searchTitle,pageable);
+        Page<Blog> page = blogService.searchBlogActivedByTitle(searchTitle,pageable);
         return new ResponseEntity<>(page, HttpStatus.CREATED);
     }
 
@@ -89,5 +89,11 @@ public class BlogApi {
     public ResponseEntity<?> getBlogByUser(@RequestParam Long userId, Pageable pageable){
         Page<Blog> page = blogService.getBlogByUser(userId,pageable);
         return new ResponseEntity<>(page, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/blog-manager/admin-search-blog-by-title")
+    public ResponseEntity<?> adminSearchBlogByTitle(@RequestParam String searchTitle, Pageable pageable){
+        Page<Blog> page = blogService.adminSearchBlogByTitle(searchTitle,pageable);
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 }

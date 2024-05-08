@@ -29,18 +29,21 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
     @Query("select b from Blog b order by  b.createdDate desc, b.createdTime desc")
     Page<Blog> findAllBlog(Pageable pageable);
 
-    @Query("select b from Blog b where b.title like ?1 and b.actived = true")
-    Page<Blog> searchBlogByTitle(String searchTitle, Pageable pageable);
+    @Query("select b from Blog b where b.title like ?1 and b.actived = true order by b.createdDate desc, b.createdTime desc")
+    Page<Blog> searchBlogActivedByTitle(String searchTitle, Pageable pageable);
 
-    @Query("select b from BlogCategory b where b.category.id = ?1 and b.blog.actived = true")
+    @Query("select b from Blog b " +
+            "join BlogCategory bcate on b.id = bcate.blog.id " +
+            "join Category c on bcate.category.id = c.id " +
+            "where c.id = ?1 and b.actived = true order by b.createdDate desc, b.createdTime desc")
     Page<Blog> getBlogByCategory(Long CategoryId, Pageable pageable);
 
-    @Query("select b from Blog b where b.title like ?1")
-    Page<Blog> adminSearchBlogByTitle(String search, Pageable pageable);
+    @Query("select b from Blog b where b.title like ?1 order by b.createdDate desc, b.createdTime desc")
+    Page<Blog> adminSearchBlogByTitle(String searchTitle, Pageable pageable);
 
-    @Query("select b from Blog b where b.description like ?1")
-    Page<Blog> adminSearchBlogByDescription(String search, Pageable pageable);
+    @Query("select b from Blog b where b.description like ?1 order by b.createdDate desc, b.createdTime desc")
+    Page<Blog> adminSearchBlogByDescription(String searchDescription, Pageable pageable);
 
-    @Query("select b from Blog b where b.user.username like ?1")
-    Page<Blog> adminSearchBlogByUsernamen(String search, Pageable pageable);
+    @Query("select b from Blog b where b.user.username like ?1 order by b.createdDate desc, b.createdTime desc")
+    Page<Blog> adminSearchBlogByUsername(String searchUsername, Pageable pageable);
 }
