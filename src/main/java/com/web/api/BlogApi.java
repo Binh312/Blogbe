@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/blog")
 @CrossOrigin
@@ -77,6 +79,12 @@ public class BlogApi {
     public ResponseEntity<?> getBlogByCategory(@RequestParam Long categoryId, Pageable pageable){
         Page<Blog> page = blogService.getBlogByCategory(categoryId,pageable);
         return new ResponseEntity<>(page, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/public/get-top10-blog")
+    public ResponseEntity<?> getTop10Blog(Pageable pageable){
+        Page<Blog> blogs = blogService.getTop10Blog(pageable);
+        return new ResponseEntity<>(blogs, HttpStatus.OK);
     }
 
     @PostMapping("/blog-manager/active-or-unacative")

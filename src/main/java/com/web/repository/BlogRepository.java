@@ -38,6 +38,9 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
             "where c.id = ?1 and b.actived = true order by b.createdDate desc, b.createdTime desc")
     Page<Blog> getBlogByCategory(Long CategoryId, Pageable pageable);
 
+    @Query(value = "select b from Blog b order by (b.numLike + b.numComment) desc")
+    Page<Blog> getTop10Blog(Pageable pageable);
+
     @Query("select b from Blog b where b.title like ?1 order by b.createdDate desc, b.createdTime desc")
     Page<Blog> adminSearchBlogByTitle(String searchTitle, Pageable pageable);
 

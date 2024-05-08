@@ -213,6 +213,10 @@ public class BlogService {
         return page;
     }
 
+    public Page<Blog> getTop10Blog(Pageable pageable){
+        return blogRepository.getTop10Blog(pageable);
+    }
+
     public ActiveStatus activeOrUnactive(Long blogId){
         Optional<Blog> blog = blogRepository.findById(blogId);
         if (blog.isEmpty()){
