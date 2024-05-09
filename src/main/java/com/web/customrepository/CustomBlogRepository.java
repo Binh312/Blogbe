@@ -26,6 +26,8 @@ public class CustomBlogRepository {
 //                predicates.add(criteriaBuilder.like(root.get("title"), "%" + request.getKeyword() + "%"));
 //            }
 
+            predicates.add(criteriaBuilder.isTrue(root.get("actived")));
+
             // query: điều kiện
             query.orderBy(
                     criteriaBuilder.desc(root.get("createdDate")),
