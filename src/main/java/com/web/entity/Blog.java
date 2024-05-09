@@ -8,6 +8,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Set;
 
 @Entity
@@ -28,6 +29,9 @@ public class Blog {
     private String image;
 
     private String content;
+
+    // Cả ngày giờ
+    //private Timestamp createDate;
 
     private Date createdDate;
 

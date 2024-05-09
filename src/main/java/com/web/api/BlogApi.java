@@ -58,8 +58,10 @@ public class BlogApi {
     }
 
     @GetMapping("/public/get-all-blog")
-    public ResponseEntity<?> getBlogActived(Pageable pageable){
-        Page<Blog> page = blogService.getBlogActived(pageable);
+    public ResponseEntity<?> getBlogActived(@RequestParam String keywords,
+                                            @RequestParam Integer currentPage,
+                                            @RequestParam Integer size){
+        Page<Blog> page = blogService.getBlogActived(keywords, currentPage, size);
         return new ResponseEntity<>(page, HttpStatus.CREATED);
     }
 
@@ -69,9 +71,11 @@ public class BlogApi {
         return new ResponseEntity<>(page, HttpStatus.CREATED);
     }
 
-    @GetMapping("/public/search-blog-actived-by-title")
-    public ResponseEntity<?> searchBlogByTitle(@RequestParam String searchTitle, Pageable pageable){
-        Page<Blog> page = blogService.searchBlogActivedByTitle(searchTitle,pageable);
+    @GetMapping("/public/search-blog-actived")
+    public ResponseEntity<?> searchBlogByTitle(@RequestParam(required = false) String title,
+                                               @RequestParam(required = false) String userName,
+                                               Pageable pageable){
+        Page<Blog> page = blogService.searchBlogActived(title,userName,pageable);
         return new ResponseEntity<>(page, HttpStatus.CREATED);
     }
 

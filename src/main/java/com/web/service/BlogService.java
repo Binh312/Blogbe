@@ -1,5 +1,6 @@
 package com.web.service;
 
+import com.web.customrepository.CustomBlogRepository;
 import com.web.dto.request.FileDto;
 import com.web.dto.request.BlogRequest;
 import com.web.entity.*;
@@ -14,8 +15,11 @@ import com.web.utils.Contains;
 import com.web.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -190,8 +194,10 @@ public class BlogService {
         return page;
     }
 
-    public Page<Blog> getBlogActived(Pageable pageable){
-        Page<Blog> page = blogRepository.getBlogActived(pageable);
+    public Page<Blog> getBlogActived(String keywords, Integer currentPage, Integer size){
+        Pageable pageable = PageRequest.of(currentPage,size);
+        Specification<Blog> specification = CustomBlogRepository.filter(keywords);
+        Page<Blog> page = blogRepository.findAll(specification, pageable);
         return page;
     }
 
@@ -200,11 +206,11 @@ public class BlogService {
         return page;
     }
 
-    public Page<Blog> searchBlogActivedByTitle(String searchTitle, Pageable pageable){
-        if (searchTitle.isEmpty()) {
+    public Page<Blog> searchBlogActived(String searchTitle, String userName, Pageable pageable){
+        if (searchTitle.isEmpty() && userName.isEmpty()) {
             return blogRepository.getBlogActived(pageable);
         } else {
-            return blogRepository.searchBlogActivedByTitle(searchTitle,pageable);
+            return blogRepository.searchBlogActived(searchTitle,userName,pageable);
         }
     }
 

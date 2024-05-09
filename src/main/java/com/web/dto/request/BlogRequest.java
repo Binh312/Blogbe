@@ -3,12 +3,18 @@ package com.web.dto.request;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 @Setter
 @Getter
 public class BlogRequest {
+    private Integer currentPage;
+
+    private Integer size;
+
+    private String keyword;
 
     private Long id;
 
