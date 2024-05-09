@@ -195,7 +195,7 @@ public class BlogService {
     }
 
     public Page<Blog> getBlogActived(String keywords, Integer currentPage, Integer size){
-        Pageable pageable = PageRequest.of(currentPage,size);
+        Pageable pageable = PageRequest.of(currentPage - 1,size);
         Specification<Blog> specification = CustomBlogRepository.filter(keywords);
         Page<Blog> page = blogRepository.findAll(specification, pageable);
         return page;
