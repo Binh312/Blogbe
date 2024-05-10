@@ -206,11 +206,11 @@ public class BlogService {
         return page;
     }
 
-    public Page<Blog> searchBlogActived(String searchTitle, String userName, Pageable pageable){
-        if (searchTitle.isEmpty() && userName.isEmpty()) {
+    public Page<Blog> searchBlogActived(String keywords,Pageable pageable){
+        if (keywords.isEmpty()) {
             return blogRepository.getBlogActived(pageable);
         } else {
-            return blogRepository.searchBlogActived(searchTitle,userName,pageable);
+            return blogRepository.searchBlogActived(keywords,pageable);
         }
     }
 
@@ -239,11 +239,11 @@ public class BlogService {
         }
     }
 
-    public Page<Blog> adminSearchBlogByTitle(String searchTitle, Pageable pageable){
-        if (searchTitle.isEmpty()){
+    public Page<Blog> adminSearchBlog(String keywords, Pageable pageable){
+        if (keywords.isEmpty()){
             return blogRepository.findAllBlog(pageable);
         } else {
-            return blogRepository.adminSearchBlogByTitle(searchTitle,pageable);
+            return blogRepository.adminSearchBlog(keywords,pageable);
         }
     }
 }

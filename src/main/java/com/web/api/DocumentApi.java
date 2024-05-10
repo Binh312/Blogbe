@@ -1,6 +1,7 @@
 package com.web.api;
 
 import com.web.dto.request.DocumentRequest;
+import com.web.entity.Blog;
 import com.web.entity.Document;
 import com.web.enums.ActiveStatus;
 import com.web.repository.DocumentRepository;
@@ -32,12 +33,6 @@ public class DocumentApi {
         return new ResponseEntity<>(document, HttpStatus.CREATED);
     }
 
-    @GetMapping("/document-manager/find-all")
-    public ResponseEntity<?> findAll(Pageable pageable){
-        Page<Document> document = documentService.findAll(pageable);
-        return new ResponseEntity<>(document, HttpStatus.CREATED);
-    }
-
     @GetMapping("/document-manager/get-document-unactived")
     public ResponseEntity<?> getDocumentUnactived(Pageable pageable){
         Page<Document> document = documentService.getDocumentUnactived(pageable);
@@ -55,15 +50,15 @@ public class DocumentApi {
         return new ResponseEntity<>(document, HttpStatus.CREATED);
     }
 
-    @GetMapping("/public/get-all-document")
-    public ResponseEntity<?> getDocumentActived(Pageable pageable){
-        Page<Document> documentPage = documentService.getDocumentActived(pageable);
+    @GetMapping("/public/search-document-actived")
+    public ResponseEntity<?> searchDocumentActived(@RequestParam(required = false) String keywords, Pageable pageable){
+        Page<Document> documentPage = documentService.searchDocumentActived(keywords,pageable);
         return new ResponseEntity<>(documentPage, HttpStatus.CREATED);
     }
 
-    @GetMapping("/public/search-document-by-name")
-    public ResponseEntity<?> searchDocumentByName(@RequestParam String name, Pageable pageable){
-        Page<Document> documentPage = documentService.searchDocumentByName(name,pageable);
+    @GetMapping("/document-manager/admin-search-document")
+    public ResponseEntity<?> adminSearchDocument(@RequestParam(required = false) String keywords, Pageable pageable){
+        Page<Document> documentPage = documentService.searchDocumentActived(keywords,pageable);
         return new ResponseEntity<>(documentPage, HttpStatus.CREATED);
     }
 
@@ -79,17 +74,17 @@ public class DocumentApi {
         return new ResponseEntity<>(activeStatuse, HttpStatus.CREATED);
     }
 
-    @GetMapping("/public/get-document-by-department")
-    public ResponseEntity<?> getDocumentByDepartment(@RequestParam Long departmentId,Pageable pageable){
-        Page<Document> documentPage = documentService.getDocumentByDepartment(departmentId,pageable);
-        return new ResponseEntity<>(documentPage, HttpStatus.OK);
-    }
-
-    @GetMapping("/public/get-document-by-specialize")
-    public ResponseEntity<?> getDocumentBySpecialize(@RequestParam Long specializeId,Pageable pageable){
-        Page<Document> documentPage = documentService.getDocumentBySpecialize(specializeId,pageable);
-        return new ResponseEntity<>(documentPage, HttpStatus.OK);
-    }
+//    @GetMapping("/public/get-document-by-department")
+//    public ResponseEntity<?> getDocumentByDepartment(@RequestParam Long departmentId,Pageable pageable){
+//        Page<Document> documentPage = documentService.getDocumentByDepartment(departmentId,pageable);
+//        return new ResponseEntity<>(documentPage, HttpStatus.OK);
+//    }
+//
+//    @GetMapping("/public/get-document-by-specialize")
+//    public ResponseEntity<?> getDocumentBySpecialize(@RequestParam Long specializeId,Pageable pageable){
+//        Page<Document> documentPage = documentService.getDocumentBySpecialize(specializeId,pageable);
+//        return new ResponseEntity<>(documentPage, HttpStatus.OK);
+//    }
 
     @GetMapping("/public/get-document-by-subject")
     public ResponseEntity<?> getDocumentBySubject(@RequestParam Long subjectId,Pageable pageable){

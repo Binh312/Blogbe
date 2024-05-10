@@ -13,6 +13,12 @@ import java.util.List;
 @Setter
 public class DocumentRequest {
 
+    private Integer currentPage;
+
+    private Integer size;
+
+    private String keyword;
+
     private String name;
 
     private String image;

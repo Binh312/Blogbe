@@ -1,6 +1,5 @@
 package com.web.customrepository;
 
-import com.web.dto.request.BlogRequest;
 import com.web.entity.Blog;
 import com.web.utils.CriteriaBuilderUtil;
 import org.springframework.data.jpa.domain.Specification;

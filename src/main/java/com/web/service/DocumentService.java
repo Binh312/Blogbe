@@ -1,5 +1,6 @@
 package com.web.service;
 
+import com.web.customrepository.CustomBlogRepository;
 import com.web.dto.request.DocumentRequest;
 import com.web.dto.request.FileDto;
 import com.web.entity.*;
@@ -10,7 +11,9 @@ import com.web.utils.Contains;
 import com.web.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.print.Doc;
@@ -65,10 +68,10 @@ public class DocumentService {
         document.setUser(user);
         document.setImage(request.getImage());
         document.setDescription(request.getDescription());
-        document.setNumDownload(0);
+        document.setNumView(0);
         document.setName(request.getName());
         document.setSubject(subjectOptional.get());
-        if(user.getRole().equals(Contains.ROLE_ADMIN)){
+        if(user.getRole().equals(Contains.ROLE_ADMIN) || user.getRole().equals(Contains.ROLE_DOCUMENT_MANAGER)){
             document.setActived(true);
         }
         Document result = documentRepository.save(document);
@@ -177,19 +180,25 @@ public class DocumentService {
         return document.get();
     }
 
-    public Page<Document> getDocumentActived(Pageable pageable){
-        Page<Document> documentPage = documentRepository.getDocumentActived(pageable);
-        return documentPage;
-    }
-
     public Page<Document> getDocumentUnactived(Pageable pageable){
         Page<Document> documentPage = documentRepository.getDocumentUnactived(pageable);
         return documentPage;
     }
 
-    public Page<Document> searchDocumentByName(String name, Pageable pageable){
-        Page<Document> documentPage = documentRepository.searchDocumentByName(name,pageable);
-        return documentPage;
+    public Page<Document> searchDocumentActived(String keywords, Pageable pageable){
+        if (keywords.isEmpty()) {
+            return documentRepository.getDocumentActived(pageable);
+        } else {
+            return documentRepository.searchDocumentActived(keywords,pageable);
+        }
+    }
+
+    public Page<Document> adminSearchDocument(String keywords, Pageable pageable){
+        if (keywords.isEmpty()) {
+            return documentRepository.getAllDocument(pageable);
+        } else {
+            return documentRepository.adminSearchDocument(keywords,pageable);
+        }
     }
 
     public Page<Document> getDocumentByCategory(Long categoryId, Pageable pageable){

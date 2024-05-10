@@ -3,6 +3,7 @@ package com.web.repository;
 import com.web.entity.Document;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,17 +11,19 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long> {
 
-    @Query("select d from Document d")
-    Page<Document> findAll(Pageable pageable);
+    @Query("select d from Document d order by d.createdDate desc, d.createdTime desc")
+    Page<Document> getAllDocument(Pageable pageable);
 
-    @Query("select d from Document d where d.actived = true")
+    @Query("select d from Document d where d.actived = true order by d.createdDate desc, d.createdTime desc")
     Page<Document> getDocumentActived(Pageable pageable);
 
-    @Query("select d from Document d where d.actived = false ")
+    @Query("select d from Document d where d.actived = false order by d.createdDate desc, d.createdTime desc")
     Page<Document> getDocumentUnactived(Pageable pageable);
 
-    @Query("select d from Document d where d.name = ?1 and d.actived = true")
-    Page<Document> searchDocumentByName(String name, Pageable pageable);
+    @Query("select d from Document d where (d.name like %?1% or d.description like %?1% " +
+            "or d.user.username like %?1% or d.subject.nameSubject like %?1% or d.subject.codeSubject like %?1% ) " +
+            "and d.actived = true order by d.createdDate desc, d.createdTime desc")
+    Page<Document> searchDocumentActived(String keywords, Pageable pageable);
 
     @Query("select d from DocumentCategory d where d.category.id = ?1 and d.document.actived = true")
     Page<Document> getDocumentByCategory(Long categoryId, Pageable pageable);
@@ -38,4 +41,9 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
             "join Subject sbj on d.subject.id = sbj.id " +
             "join Specialize s on sbj.specialize.id = s.id where s.id = ?1 and d.actived = true")
     Page<Document> getDocumentBySpecialize(Long specializeId, Pageable pageable);
+
+    @Query("select d from Document d where (d.name like %?1% or d.description like %?1% " +
+            "or d.user.username like %?1% or d.subject.nameSubject like %?1% or d.subject.codeSubject like %?1% ) " +
+            "order by d.createdDate desc, d.createdTime desc")
+    Page<Document> adminSearchDocument(String keywords, Pageable pageable);
 }
