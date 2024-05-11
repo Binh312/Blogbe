@@ -48,18 +48,18 @@ public class DocumentService {
         if (subjectOptional.isEmpty()){
             throw new MessageException("Môn học không tồn tại");
         }
-        List<Category> categories = new ArrayList<>();
-        for (long id : request.getListCategoryId()){
-            Optional<Category> category = categoryRepository.findById(id);
-            if (category.isEmpty()){
-                throw new MessageException("Danh mục : " + id +"không tồn tại");
-            }
-            categories.add(category.get());
-        }
+//        List<Category> categories = new ArrayList<>();
+//        for (long id : request.getListCategoryId()){
+//            Optional<Category> category = categoryRepository.findById(id);
+//            if (category.isEmpty()){
+//                throw new MessageException("Danh mục : " + id +"không tồn tại");
+//            }
+//            categories.add(category.get());
+//        }
 
-        if (request.getLinkFiles().isEmpty()){
-            throw new MessageException("Không có file nào!");
-        }
+//        if (request.getLinkFiles().isEmpty()){
+//            throw new MessageException("Không có file nào!");
+//        }
 
         User user = userUtils.getUserWithAuthority();
         Document document = new Document();
@@ -76,26 +76,26 @@ public class DocumentService {
         }
         Document result = documentRepository.save(document);
 
-        List<DocumentCategory> documentCategories = new ArrayList<>();
-        for (Category c: categories){
-            DocumentCategory documentCategory = new DocumentCategory();
-            documentCategory.setCategory(c);
-            documentCategory.setDocument(result);
-            documentCategories.add(documentCategory);
-        }
-        documentCategoryRepository.saveAll(documentCategories);
+//        List<DocumentCategory> documentCategories = new ArrayList<>();
+//        for (Category c: categories){
+//            DocumentCategory documentCategory = new DocumentCategory();
+//            documentCategory.setCategory(c);
+//            documentCategory.setDocument(result);
+//            documentCategories.add(documentCategory);
+//        }
+//        documentCategoryRepository.saveAll(documentCategories);
 
-        List<DocumentFile> documentFiles = new ArrayList<>();
-        for (FileDto fileDto: request.getLinkFiles()){
-            DocumentFile documentFile = new DocumentFile();
-            documentFile.setDocument(result);
-            documentFile.setLinkFile(fileDto.getLinkFile());
-            documentFile.setFileName(fileDto.getFileName());
-            documentFile.setFileSize(fileDto.getFileSize());
-            documentFile.setFileType(fileDto.getTypeFile());
-            documentFiles.add(documentFile);
-        }
-        documentFileRepository.saveAll(documentFiles);
+//        List<DocumentFile> documentFiles = new ArrayList<>();
+//        for (FileDto fileDto: request.getLinkFiles()){
+//            DocumentFile documentFile = new DocumentFile();
+//            documentFile.setDocument(result);
+//            documentFile.setLinkFile(fileDto.getLinkFile());
+//            documentFile.setFileName(fileDto.getFileName());
+//            documentFile.setFileSize(fileDto.getFileSize());
+//            documentFile.setFileType(fileDto.getTypeFile());
+//            documentFiles.add(documentFile);
+//        }
+//        documentFileRepository.saveAll(documentFiles);
 
         return result;
     }
@@ -113,41 +113,41 @@ public class DocumentService {
             throw new MessageException("Môn học không tồn tại");
         }
 
-        List<Category> categories = new ArrayList<>();
-        for (long categoryid : request.getListCategoryId()){
-            Optional<Category> category = categoryRepository.findById(categoryid);
-            if (category.isEmpty()){
-                throw new MessageException("Danh mục : " + categoryid +"không tồn tại");
-            }
-            categories.add(category.get());
-        }
+//        List<Category> categories = new ArrayList<>();
+//        for (long categoryid : request.getListCategoryId()){
+//            Optional<Category> category = categoryRepository.findById(categoryid);
+//            if (category.isEmpty()){
+//                throw new MessageException("Danh mục : " + categoryid +"không tồn tại");
+//            }
+//            categories.add(category.get());
+//        }
         document.get().setName(request.getName());
         document.get().setDescription(request.getDescription());
         document.get().setImage(request.getImage());
         document.get().setSubject(subjectOptional.get());
         documentRepository.save(document.get());
-        documentCategoryRepository.deleteByDocument(document.get().getId());
+//        documentCategoryRepository.deleteByDocument(document.get().getId());
 
-        List<DocumentCategory> documentCategories = new ArrayList<>();
-        for (Category c: categories){
-            DocumentCategory documentCategory = new DocumentCategory();
-            documentCategory.setCategory(c);
-            documentCategory.setDocument(document.get());
-            documentCategories.add(documentCategory);
-        }
-        documentCategoryRepository.saveAll(documentCategories);
+//        List<DocumentCategory> documentCategories = new ArrayList<>();
+//        for (Category c: categories){
+//            DocumentCategory documentCategory = new DocumentCategory();
+//            documentCategory.setCategory(c);
+//            documentCategory.setDocument(document.get());
+//            documentCategories.add(documentCategory);
+//        }
+//        documentCategoryRepository.saveAll(documentCategories);
 
-        List<DocumentFile> documentFiles = new ArrayList<>();
-        for (FileDto fileDto: request.getLinkFiles()){
-            DocumentFile documentFile = new DocumentFile();
-            documentFile.setDocument(document.get());
-            documentFile.setLinkFile(fileDto.getLinkFile());
-            documentFile.setFileName(fileDto.getFileName());
-            documentFile.setFileSize(fileDto.getFileSize());
-            documentFile.setFileType(fileDto.getTypeFile());
-            documentFiles.add(documentFile);
-        }
-        documentFileRepository.saveAll(documentFiles);
+//        List<DocumentFile> documentFiles = new ArrayList<>();
+//        for (FileDto fileDto: request.getLinkFiles()){
+//            DocumentFile documentFile = new DocumentFile();
+//            documentFile.setDocument(document.get());
+//            documentFile.setLinkFile(fileDto.getLinkFile());
+//            documentFile.setFileName(fileDto.getFileName());
+//            documentFile.setFileSize(fileDto.getFileSize());
+//            documentFile.setFileType(fileDto.getTypeFile());
+//            documentFiles.add(documentFile);
+//        }
+//        documentFileRepository.saveAll(documentFiles);
 
         return document.get();
     }

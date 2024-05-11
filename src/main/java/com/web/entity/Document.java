@@ -34,6 +34,8 @@ public class Document {
 
     private String description;
 
+    private String linkFile;
+
     private Boolean actived = false;
 
     @ManyToOne
@@ -44,11 +46,11 @@ public class Document {
     @JoinColumn(name = "subject_id")
     private Subject subject;
 
-    @OneToMany(mappedBy = "document", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
-    private Set<DocumentCategory> documentCategories = new HashSet<>();
+//    @OneToMany(mappedBy = "document", cascade = CascadeType.REMOVE)
+//    @JsonManagedReference
+//    private Set<DocumentCategory> documentCategories = new HashSet<>();
 
-    @OneToMany(mappedBy = "document", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
-    private Set<DocumentFile> documentFiles = new HashSet<>();
+//    @OneToMany(mappedBy = "document", cascade = CascadeType.REMOVE)
+//    @JsonManagedReference
+//    private Set<DocumentFile> documentFiles = new HashSet<>();
 }

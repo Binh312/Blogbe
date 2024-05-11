@@ -83,13 +83,13 @@ public class BlogService {
             blogCategoryRepository.save(blogCategory);
         }
 
-        for (FileDto blogFileDto : request.getLinkFiles()) {
-            BlogFile blogFile = new BlogFile();
-            blogFile.setBlog(result);
-            blogFile.setLinkFile(blogFileDto.getLinkFile());
-            blogFile.setTypeFile(blogFileDto.getTypeFile());
-            blogFileRepository.save(blogFile);
-        }
+//        for (FileDto blogFileDto : request.getLinkFiles()) {
+//            BlogFile blogFile = new BlogFile();
+//            blogFile.setBlog(result);
+//            blogFile.setLinkFile(blogFileDto.getLinkFile());
+//            blogFile.setTypeFile(blogFileDto.getTypeFile());
+//            blogFileRepository.save(blogFile);
+//        }
         return result;
     }
 
@@ -158,14 +158,14 @@ public class BlogService {
             blogCategoryRepository.save(blogCategory);
         }
 
-        blogFileRepository.deleteByBlog(request.getId());
-        for (FileDto blogFileDto : request.getLinkFiles()) {
-            BlogFile blogFile = new BlogFile();
-            blogFile.setBlog(result);
-            blogFile.setLinkFile(blogFileDto.getLinkFile());
-            blogFile.setTypeFile(blogFileDto.getTypeFile());
-            blogFileRepository.save(blogFile);
-        }
+//        blogFileRepository.deleteByBlog(request.getId());
+//        for (FileDto blogFileDto : request.getLinkFiles()) {
+//            BlogFile blogFile = new BlogFile();
+//            blogFile.setBlog(result);
+//            blogFile.setLinkFile(blogFileDto.getLinkFile());
+//            blogFile.setTypeFile(blogFileDto.getTypeFile());
+//            blogFileRepository.save(blogFile);
+//        }
         return result;
     }
 

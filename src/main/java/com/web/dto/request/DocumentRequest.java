@@ -25,9 +25,11 @@ public class DocumentRequest {
 
     private String description;
 
+    private String linkFile;
+
     private Long subjectId;
 
-    private List<Long> listCategoryId = new ArrayList<>();
+//    private List<Long> listCategoryId = new ArrayList<>();
 
-    private List<FileDto> linkFiles = new ArrayList<>();
+//    private List<FileDto> linkFiles = new ArrayList<>();
 }
