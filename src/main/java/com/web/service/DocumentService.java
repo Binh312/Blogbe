@@ -152,10 +152,6 @@ public class DocumentService {
         return document.get();
     }
 
-    public Page<Document> findAll(Pageable pageable){
-        return documentRepository.findAll(pageable);
-    }
-
     public void delete(Long id){
         Optional<Document> document = documentRepository.findById(id);
         if (document.isEmpty()){
@@ -176,13 +172,18 @@ public class DocumentService {
         Optional<Document> document = documentRepository.findById(id);
         if (document.isEmpty()){
             throw new MessageException("Document không tồn tại");
+        } else {
+            document.get().setNumView(document.get().getNumView() + 1);
+            return document.get();
         }
-        return document.get();
+    }
+
+    public Page<Document> getTop5Document(Pageable pageable){
+        return documentRepository.getTop5Document(pageable);
     }
 
     public Page<Document> getDocumentUnactived(Pageable pageable){
-        Page<Document> documentPage = documentRepository.getDocumentUnactived(pageable);
-        return documentPage;
+        return documentRepository.getDocumentUnactived(pageable);
     }
 
     public Page<Document> searchDocumentActived(String keywords, Pageable pageable){
@@ -202,8 +203,7 @@ public class DocumentService {
     }
 
     public Page<Document> getDocumentByCategory(Long categoryId, Pageable pageable){
-        Page<Document> documentPage = documentRepository.getDocumentByCategory(categoryId,pageable);
-        return documentPage;
+        return documentRepository.getDocumentByCategory(categoryId,pageable);
     }
 
     public ActiveStatus activeOrUnactive(Long documentId){
@@ -223,17 +223,15 @@ public class DocumentService {
     }
 
     public Page<Document> getDocumentBySubject(Long subjectId, Pageable pageable){
-        Page<Document> documentPage = documentRepository.getDocumentBySubject(subjectId,pageable);
-        return documentPage;
+        return documentRepository.getDocumentBySubject(subjectId,pageable);
     }
 
     public Page<Document> getDocumentByDepartment(Long departmentId, Pageable pageable){
-        Page<Document> documentPage = documentRepository.getDocumentByDepartment(departmentId,pageable);
-        return documentPage;
+        return documentRepository.getDocumentByDepartment(departmentId,pageable);
     }
 
     public Page<Document> getDocumentBySpecialize(Long specializeId, Pageable pageable){
-        Page<Document> documentPage = documentRepository.getDocumentBySpecialize(specializeId,pageable);
-        return documentPage;
+        return documentRepository.getDocumentBySpecialize(specializeId,pageable);
     }
+
 }

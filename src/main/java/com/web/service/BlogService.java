@@ -59,7 +59,9 @@ public class BlogService {
             if (category.isEmpty()) {
                 throw new MessageException("Danh mục :" + id + " không tồn tại");
             }
+            category.get().setNumBlog(category.get().getNumBlog() + 1);
             categories.add(category.get());
+            categoryRepository.save(category.get());
         }
 
         User user = userUtils.getUserWithAuthority();
@@ -107,14 +109,31 @@ public class BlogService {
             throw new MessageException("Không đủ quyền");
         }
 
+        //Giảm tổng số bài viết trong danh mục
+        List<BlogCategory> blogCategories = blogCategoryRepository.findAllByBlogId(request.getId());
         List<Category> categories = new ArrayList<>();
+        for (BlogCategory blogCategory: blogCategories){
+            categories.add(blogCategory.getCategory());
+        }
+
+        List<Category> newCategories = new ArrayList<>();
+        for (Category category: categories) {
+            category.setNumBlog(category.getNumBlog() - 1);
+            newCategories.add(category);
+        }
+        categoryRepository.saveAll(newCategories);
+
+        //Tăng tổng số bài viết trong danh mục
+        List<Category> addCategories = new ArrayList<>();
         // kiểm tra xem có danh mục nào không tồn tại không, nếu có thì hủy hàm, báo lỗi
         for (Long id : request.getListCategoryId()) {
             Optional<Category> category = categoryRepository.findById(id);
             if (category.isEmpty()) {
                 throw new MessageException("Danh mục :" + id + " không tồn tại");
             }
-            categories.add(category.get());
+            category.get().setNumBlog(category.get().getNumBlog() + 1);
+            addCategories.add(category.get());
+            categoryRepository.save(category.get());
         }
 
         Blog blog = blogMapper.convertRequestToBlog(request);
@@ -132,7 +151,7 @@ public class BlogService {
         Blog result = blogRepository.save(blog);
 
         blogCategoryRepository.deleteByBlog(result.getId());
-        for (Category c : categories) {
+        for (Category c : addCategories) {
             BlogCategory blogCategory = new BlogCategory();
             blogCategory.setCategory(c);
             blogCategory.setBlog(result);
@@ -148,6 +167,37 @@ public class BlogService {
             blogFileRepository.save(blogFile);
         }
         return result;
+    }
+
+    public String deleteBlog(Long blogId){
+        Optional<Blog> blogOptional = blogRepository.findById(blogId);
+        if(blogOptional.isEmpty()){
+            throw new MessageException("blog id không tồn tại!");
+        }
+
+        // lấy thông tin user đang đăng nhập (user gửi yêu cầu)
+        User user = userUtils.getUserWithAuthority();
+
+        if (!blogOptional.get().getUser().getId().equals(user.getId()) && !user.getRole().equals(Contains.ROLE_ADMIN)
+                && !user.getRole().equals(Contains.ROLE_BLOG_MANAGER)){
+            throw new MessageException("Không đủ quyền");
+        }
+
+        List<BlogCategory> blogCategories = blogCategoryRepository.findAllByBlogId(blogId);
+        List<Category> categories = new ArrayList<>();
+        for (BlogCategory blogCategory: blogCategories){
+            categories.add(blogCategory.getCategory());
+        }
+
+        List<Category> newCategories = new ArrayList<>();
+        for (Category category: categories) {
+            category.setNumBlog(category.getNumBlog() - 1);
+            newCategories.add(category);
+        }
+        categoryRepository.saveAll(newCategories);
+
+        blogRepository.delete(blogOptional.get());
+        return "Đã xóa bài viết thành công";
     }
 
     public Blog getBlogById(Long id){
@@ -171,23 +221,6 @@ public class BlogService {
         return page;
     }
 
-    public String deleteBlog(Long blogId){
-        Optional<Blog> blogOptional = blogRepository.findById(blogId);
-        if(blogOptional.isEmpty()){
-            throw new MessageException("blog id không tồn tại!");
-        }
-
-        // lấy thông tin user đang đăng nhập (user gửi yêu cầu)
-        User user = userUtils.getUserWithAuthority();
-
-        if (blogOptional.get().getUser().getId() != user.getId() && !user.getRole().equals(Contains.ROLE_ADMIN)
-                && !user.getRole().equals(Contains.ROLE_BLOG_MANAGER)){
-            throw new MessageException("Không đủ quyền");
-        }
-
-        blogRepository.delete(blogOptional.get());
-        return "Đã xóa bài viết thành công";
-    }
 
     public Page<Blog> getBlogByUser(Long userId, Pageable pageable){
         Page<Blog> page = blogRepository.getBlogByUser(userId,pageable);

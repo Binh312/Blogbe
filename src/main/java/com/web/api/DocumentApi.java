@@ -50,6 +50,12 @@ public class DocumentApi {
         return new ResponseEntity<>(document, HttpStatus.CREATED);
     }
 
+    @GetMapping("/public/get-top5-document")
+    public ResponseEntity<?> getTop5Document(Pageable pageable){
+        Page<Document> document = documentService.getTop5Document(pageable);
+        return new ResponseEntity<>(document, HttpStatus.CREATED);
+    }
+
     @GetMapping("/public/search-document-actived")
     public ResponseEntity<?> searchDocumentActived(@RequestParam(required = false) String keywords, Pageable pageable){
         Page<Document> documentPage = documentService.searchDocumentActived(keywords,pageable);
@@ -58,7 +64,7 @@ public class DocumentApi {
 
     @GetMapping("/document-manager/admin-search-document")
     public ResponseEntity<?> adminSearchDocument(@RequestParam(required = false) String keywords, Pageable pageable){
-        Page<Document> documentPage = documentService.searchDocumentActived(keywords,pageable);
+        Page<Document> documentPage = documentService.adminSearchDocument(keywords,pageable);
         return new ResponseEntity<>(documentPage, HttpStatus.CREATED);
     }
 

@@ -8,11 +8,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long> {
 
     @Query("select d from Document d order by d.createdDate desc, d.createdTime desc")
     Page<Document> getAllDocument(Pageable pageable);
+
+    @Query("select d from Document d where d.actived = true order by d.numView desc")
+    Page<Document> getTop5Document(Pageable pageable);
 
     @Query("select d from Document d where d.actived = true order by d.createdDate desc, d.createdTime desc")
     Page<Document> getDocumentActived(Pageable pageable);

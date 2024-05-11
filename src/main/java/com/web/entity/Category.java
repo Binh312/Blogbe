@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "cateogy")
@@ -21,5 +22,10 @@ public class Category {
 
     private String image;
 
+    private Integer numBlog;
+
     private CategoryType categoryType;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private Set<BlogCategory> blogCategories;
 }

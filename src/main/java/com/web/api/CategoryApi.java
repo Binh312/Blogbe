@@ -6,6 +6,8 @@ import com.web.entity.Category;
 import com.web.enums.CategoryType;
 import com.web.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,5 +50,11 @@ public class CategoryApi {
     public ResponseEntity<?> delete(@RequestParam("id") Long id) {
         categoryService.delete(id);
         return new ResponseEntity<>("success", HttpStatus.OK);
+    }
+
+    @GetMapping("/public/get-top5-category")
+    public ResponseEntity<?> getTop5Category(Pageable pageable){
+        Page<Category> page = categoryService.getTop5Category(pageable);
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 }
