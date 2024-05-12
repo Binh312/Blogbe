@@ -38,6 +38,8 @@ public class Document {
 
     private Boolean actived = false;
 
+    private String nameSubject;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

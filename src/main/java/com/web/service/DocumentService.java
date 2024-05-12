@@ -74,6 +74,7 @@ public class DocumentService {
         document.setNumView(0);
         document.setName(request.getName());
         document.setLinkFile(request.getLinkFile());
+        document.setNameSubject(subjectOptional.get().getNameSubject());
         document.setSubject(subjectOptional.get());
         if(user.getRole().equals(Contains.ROLE_ADMIN) || user.getRole().equals(Contains.ROLE_DOCUMENT_MANAGER)){
             document.setActived(true);
@@ -131,6 +132,7 @@ public class DocumentService {
         document.setUser(document.getUser());
         document.setNumView(documentOptional.get().getNumView());
         document.setLinkFile(request.getLinkFile());
+        document.setNameSubject(subjectOptional.get().getNameSubject());
         document.setSubject(subjectOptional.get());
         if (documentOptional.get().getUser().getId() == user.getId() && !user.getRole().equals(Contains.ROLE_ADMIN)
                 && !user.getRole().equals(Contains.ROLE_DOCUMENT_MANAGER)){
