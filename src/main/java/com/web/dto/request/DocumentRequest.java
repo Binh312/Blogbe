@@ -13,11 +13,7 @@ import java.util.List;
 @Setter
 public class DocumentRequest {
 
-    private Integer currentPage;
-
-    private Integer size;
-
-    private String keyword;
+    private Long id;
 
     private String name;
 
@@ -30,6 +26,6 @@ public class DocumentRequest {
     private Long subjectId;
 
 //    private List<Long> listCategoryId = new ArrayList<>();
-
+//
 //    private List<FileDto> linkFiles = new ArrayList<>();
 }

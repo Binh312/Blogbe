@@ -1,6 +1,5 @@
 package com.web.service;
 
-import com.web.customrepository.CustomBlogRepository;
 import com.web.dto.request.FileDto;
 import com.web.dto.request.BlogRequest;
 import com.web.entity.*;
@@ -15,11 +14,8 @@ import com.web.utils.Contains;
 import com.web.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -71,7 +67,7 @@ public class BlogService {
         blog.setUser(user);
         blog.setNumLike(0);
         blog.setNumComment(0);
-        if(user.getRole().equals(Contains.ROLE_ADMIN)){
+        if(user.getRole().equals(Contains.ROLE_ADMIN) || user.getRole().equals(Contains.ROLE_BLOG_MANAGER)){
             blog.setActived(true);
         }
         Blog result = blogRepository.save(blog);
@@ -217,26 +213,19 @@ public class BlogService {
     }
 
     public Page<Blog> findAllBlog(Pageable pageable){
-        Page<Blog> page = blogRepository.findAllBlog(pageable);
-        return page;
+        return blogRepository.findAllBlog(pageable);
     }
-
 
     public Page<Blog> getBlogByUser(Long userId, Pageable pageable){
-        Page<Blog> page = blogRepository.getBlogByUser(userId,pageable);
-        return page;
+        return blogRepository.getBlogByUser(userId,pageable);
     }
 
-    public Page<Blog> getBlogActived(String keywords, Integer currentPage, Integer size){
-        Pageable pageable = PageRequest.of(currentPage - 1,size);
-        Specification<Blog> specification = CustomBlogRepository.filter(keywords);
-        Page<Blog> page = blogRepository.findAll(specification, pageable);
-        return page;
+    public Page<Blog> getBlogActived(Pageable pageable){
+        return blogRepository.getBlogActived(pageable);
     }
 
     public Page<Blog> getBlogUnActived(Pageable pageable){
-        Page<Blog> page = blogRepository.getBlogUnActived(pageable);
-        return page;
+        return blogRepository.getBlogUnActived(pageable);
     }
 
     public Page<Blog> searchBlogActived(String keywords,Pageable pageable){
@@ -248,8 +237,7 @@ public class BlogService {
     }
 
     public Page<Blog> getBlogByCategory(Long categoryId, Pageable pageable){
-        Page<Blog> page = blogRepository.getBlogByCategory(categoryId, pageable);
-        return page;
+        return blogRepository.getBlogByCategory(categoryId, pageable);
     }
 
     public Page<Blog> getTop10Blog(Pageable pageable){

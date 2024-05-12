@@ -44,7 +44,7 @@ public class DocumentApi {
         documentService.delete(documentId);
     }
 
-    @GetMapping("/all/findbyid")
+    @GetMapping("/public/findbyid")
     public ResponseEntity<?> findById(@RequestParam Long id){
         Document document = documentService.findById(id);
         return new ResponseEntity<>(document, HttpStatus.CREATED);

@@ -25,7 +25,4 @@ public class Category {
     private Integer numBlog;
 
     private CategoryType categoryType;
-
-    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-    private Set<BlogCategory> blogCategories;
 }

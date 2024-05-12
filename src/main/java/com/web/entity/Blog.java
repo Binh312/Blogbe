@@ -30,9 +30,6 @@ public class Blog {
 
     private String content;
 
-    // Cả ngày giờ
-    //private Timestamp createDate;
-
     private Date createdDate;
 
     private Time createdTime;

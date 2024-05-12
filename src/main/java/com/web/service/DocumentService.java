@@ -1,11 +1,11 @@
 package com.web.service;
 
-import com.web.customrepository.CustomBlogRepository;
 import com.web.dto.request.DocumentRequest;
 import com.web.dto.request.FileDto;
 import com.web.entity.*;
 import com.web.enums.ActiveStatus;
 import com.web.exception.MessageException;
+import com.web.mapper.DocumentMapper;
 import com.web.repository.*;
 import com.web.utils.Contains;
 import com.web.utils.UserUtils;
@@ -38,6 +38,9 @@ public class DocumentService {
     private UserUtils userUtils;
 
     @Autowired
+    private DocumentMapper documentMapper;
+
+    @Autowired
     private SubjectRepository subjectRepository;
 
     @Autowired
@@ -56,13 +59,13 @@ public class DocumentService {
 //            }
 //            categories.add(category.get());
 //        }
-
+//
 //        if (request.getLinkFiles().isEmpty()){
 //            throw new MessageException("Không có file nào!");
 //        }
 
         User user = userUtils.getUserWithAuthority();
-        Document document = new Document();
+        Document document = documentMapper.convertRequestToBlog(request);
         document.setCreatedDate(new Date(System.currentTimeMillis()));
         document.setCreatedTime(new Time(System.currentTimeMillis()));
         document.setUser(user);
@@ -70,11 +73,11 @@ public class DocumentService {
         document.setDescription(request.getDescription());
         document.setNumView(0);
         document.setName(request.getName());
+        document.setLinkFile(request.getLinkFile());
         document.setSubject(subjectOptional.get());
         if(user.getRole().equals(Contains.ROLE_ADMIN) || user.getRole().equals(Contains.ROLE_DOCUMENT_MANAGER)){
             document.setActived(true);
         }
-        Document result = documentRepository.save(document);
 
 //        List<DocumentCategory> documentCategories = new ArrayList<>();
 //        for (Category c: categories){
@@ -84,7 +87,7 @@ public class DocumentService {
 //            documentCategories.add(documentCategory);
 //        }
 //        documentCategoryRepository.saveAll(documentCategories);
-
+//
 //        List<DocumentFile> documentFiles = new ArrayList<>();
 //        for (FileDto fileDto: request.getLinkFiles()){
 //            DocumentFile documentFile = new DocumentFile();
@@ -97,15 +100,15 @@ public class DocumentService {
 //        }
 //        documentFileRepository.saveAll(documentFiles);
 
-        return result;
+        return documentRepository.save(document);
     }
 
     public Document update(DocumentRequest request, Long id){
         if (id == null){
             throw new MessageException("Id không được null!");
         }
-        Optional<Document> document = documentRepository.findById(id);
-        if (document.isEmpty()){
+        Optional<Document> documentOptional = documentRepository.findById(id);
+        if (documentOptional.isEmpty()){
             throw new MessageException("Document không tồn tại");
         }
         Optional<Subject> subjectOptional = subjectRepository.findById(request.getSubjectId());
@@ -121,11 +124,20 @@ public class DocumentService {
 //            }
 //            categories.add(category.get());
 //        }
-        document.get().setName(request.getName());
-        document.get().setDescription(request.getDescription());
-        document.get().setImage(request.getImage());
-        document.get().setSubject(subjectOptional.get());
-        documentRepository.save(document.get());
+        User user = userUtils.getUserWithAuthority();
+        Document document = documentMapper.convertRequestToBlog(request);
+        document.setCreatedDate(documentOptional.get().getCreatedDate());
+        document.setCreatedTime(documentOptional.get().getCreatedTime());
+        document.setUser(document.getUser());
+        document.setNumView(documentOptional.get().getNumView());
+        document.setLinkFile(request.getLinkFile());
+        document.setSubject(subjectOptional.get());
+        if (documentOptional.get().getUser().getId() == user.getId() && !user.getRole().equals(Contains.ROLE_ADMIN)
+                && !user.getRole().equals(Contains.ROLE_DOCUMENT_MANAGER)){
+            document.setActived(false);
+        } else {
+            document.setActived(documentOptional.get().getActived());
+        }
 //        documentCategoryRepository.deleteByDocument(document.get().getId());
 
 //        List<DocumentCategory> documentCategories = new ArrayList<>();
@@ -149,7 +161,7 @@ public class DocumentService {
 //        }
 //        documentFileRepository.saveAll(documentFiles);
 
-        return document.get();
+        return documentRepository.save(document);
     }
 
     public void delete(Long id){
@@ -174,7 +186,7 @@ public class DocumentService {
             throw new MessageException("Document không tồn tại");
         } else {
             document.get().setNumView(document.get().getNumView() + 1);
-            return document.get();
+            return documentRepository.save(document.get());
         }
     }
 
