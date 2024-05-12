@@ -49,6 +49,19 @@ public class DocumentApi {
         return new ResponseEntity<>(documentResponses, HttpStatus.CREATED);
     }
 
+    @GetMapping("/document-manager/admin-get-all-and-search-document")
+    public ResponseEntity<?> adminGetAllAndSearchDocument(@RequestParam(required = false) String keywords, Pageable pageable){
+        Page<Document> document = documentService.adminGetAllAndSearchDocument(keywords,pageable);
+        Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
+        return new ResponseEntity<>(documentResponses, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/document-manager/active-or-unacative")
+    public ResponseEntity<?> activeOrUnactive(@RequestParam Long documentId){
+        ActiveStatus activeStatuse = documentService.activeOrUnactive(documentId);
+        return new ResponseEntity<>(activeStatuse, HttpStatus.CREATED);
+    }
+
     @GetMapping("/public/findbyid")
     public ResponseEntity<?> findById(@RequestParam Long id){
         Document document = documentService.findById(id);
@@ -70,32 +83,20 @@ public class DocumentApi {
         return new ResponseEntity<>(documentResponses, HttpStatus.CREATED);
     }
 
-    @GetMapping("/document-manager/admin-get-all-and-search-document")
-    public ResponseEntity<?> adminGetAllAndSearchDocument(@RequestParam(required = false) String keywords, Pageable pageable){
-        Page<Document> document = documentService.adminGetAllAndSearchDocument(keywords,pageable);
-        Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
-        return new ResponseEntity<>(documentResponses, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/public/get-document-by-category")
-    public ResponseEntity<?> getDocumentByCategory(@RequestParam Long categoryId, Pageable pageable){
-        Page<Document> document = documentService.getDocumentByCategory(categoryId,pageable);
-        Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
-        return new ResponseEntity<>(documentResponses, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/document-manager/active-or-unacative")
-    public ResponseEntity<?> activeOrUnactive(@RequestParam Long documentId){
-        ActiveStatus activeStatuse = documentService.activeOrUnactive(documentId);
-        return new ResponseEntity<>(activeStatuse, HttpStatus.CREATED);
-    }
-
     @GetMapping("/public/get-document-by-subject")
     public ResponseEntity<?> getDocumentBySubject(@RequestParam Long subjectId,Pageable pageable){
         Page<Document> document = documentService.getDocumentBySubject(subjectId,pageable);
         Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
         return new ResponseEntity<>(documentResponses, HttpStatus.OK);
     }
+
+//    @GetMapping("/public/get-document-by-category")
+//    public ResponseEntity<?> getDocumentByCategory(@RequestParam Long categoryId, Pageable pageable){
+//        Page<Document> document = documentService.getDocumentByCategory(categoryId,pageable);
+//        Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
+//        return new ResponseEntity<>(documentResponses, HttpStatus.CREATED);
+//    }
+
 
 //    @GetMapping("/public/get-document-by-department")
 //    public ResponseEntity<?> getDocumentByDepartment(@RequestParam Long departmentId,Pageable pageable){
