@@ -28,33 +28,27 @@ public class CategoryApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/admin/find-by-id")
-    public ResponseEntity<?> findById(@RequestParam("id") Long id) {
-        Category result = categoryService.findById(id);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @GetMapping("/public/find-all-list")
-    public ResponseEntity<?> findAllList() {
-        List<Category> result = categoryService.findAllList();
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @GetMapping("/public/find-by-type")
-    public ResponseEntity<?> findByType(@RequestParam("type") CategoryType categoryType) {
-        List<Category> result = categoryService.findByType(categoryType);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
     @DeleteMapping("/admin/delete")
     public ResponseEntity<?> delete(@RequestParam("id") Long id) {
         categoryService.delete(id);
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
-    @GetMapping("/public/get-top5-category")
-    public ResponseEntity<?> getTop5Category(Pageable pageable){
-        Page<Category> page = categoryService.getTop5Category(pageable);
+    @GetMapping("/public/find-by-id")
+    public ResponseEntity<?> getCategoryById(@RequestParam("id") Long id) {
+        Category result = categoryService.getCategoryById(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/public/find-by-type")
+    public ResponseEntity<?> findByType(@RequestParam("type") CategoryType categoryType, Pageable pageable) {
+        Page<Category> result = categoryService.findByType(categoryType,pageable);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/public/get-all-and-search-category")
+    public ResponseEntity<?> getTop5Category(String name, Pageable pageable){
+        Page<Category> page = categoryService.getAllCategory(name,pageable);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 }

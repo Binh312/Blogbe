@@ -38,23 +38,23 @@ public class CategoryService {
         categoryRepository.deleteById(id);
     }
 
-    public List<Category> findAllList(){
-        return categoryRepository.findAll();
+    public Page<Category> findByType(CategoryType categoryType, Pageable pageable){
+        return categoryRepository.findByType(categoryType, pageable);
     }
 
-    public List<Category> findByType(CategoryType categoryType){
-        return categoryRepository.findByType(categoryType);
-    }
-
-    public Category findById(Long id){
-        Optional<Category> category = categoryRepository.findById(id);
+    public Category getCategoryById(Long id){
+        Optional<Category> category = categoryRepository.getCategoryById(id);
         if(category.isEmpty()){
             throw new MessageException("Không tìm thấy danh mục");
         }
         return category.get();
     }
 
-    public Page<Category> getTop5Category(Pageable pageable){
-        return categoryRepository.getTop5Category(pageable);
+    public Page<Category> getAllCategory(String name, Pageable pageable){
+        if (name.isEmpty()){
+            return categoryRepository.getAllCategory(pageable);
+        } else {
+            return categoryRepository.searchCategoriesByName(name,pageable);
+        }
     }
 }
