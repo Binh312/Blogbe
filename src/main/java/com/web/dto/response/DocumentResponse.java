@@ -1,5 +1,6 @@
 package com.web.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.web.entity.Document;
 import com.web.entity.User;
 import lombok.AllArgsConstructor;
@@ -20,8 +21,10 @@ public class DocumentResponse {
 
     private String name;
 
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate createdDate;
 
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalDateTime createdTime;
 
     private String image;
