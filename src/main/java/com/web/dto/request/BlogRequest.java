@@ -11,12 +11,6 @@ import java.util.List;
 @Getter
 public class BlogRequest {
 
-    private Integer currentPage;
-
-    private Integer size;
-
-    private String keyword;
-
     private Long id;
 
     private String title;

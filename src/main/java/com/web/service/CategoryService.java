@@ -57,4 +57,8 @@ public class CategoryService {
             return categoryRepository.searchCategoriesByName(name,pageable);
         }
     }
+
+    public Page<Category> getTop5Category(Pageable pageable){
+        return categoryRepository.getTop5Category(pageable);
+    }
 }

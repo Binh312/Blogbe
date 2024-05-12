@@ -204,18 +204,6 @@ public class BlogService {
         return blog.get();
     }
 
-    public Blog findById(Long id){
-        Optional<Blog> blog = blogRepository.findById(id);
-        if (blog.isEmpty()){
-            throw new MessageException("Blog không tồn tại");
-        }
-        return blog.get();
-    }
-
-    public Page<Blog> findAllBlog(Pageable pageable){
-        return blogRepository.findAllBlog(pageable);
-    }
-
     public Page<Blog> getBlogByUser(Long userId, Pageable pageable){
         return blogRepository.getBlogByUser(userId,pageable);
     }
@@ -260,7 +248,7 @@ public class BlogService {
         }
     }
 
-    public Page<Blog> adminSearchBlog(String keywords, Pageable pageable){
+    public Page<Blog> adminGetAllAndSearchBlog(String keywords, Pageable pageable){
         if (keywords.isEmpty()){
             return blogRepository.findAllBlog(pageable);
         } else {

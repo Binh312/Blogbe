@@ -33,28 +33,16 @@ public class BlogApi {
         return new ResponseEntity<>(blog, HttpStatus.CREATED);
     }
 
-    @GetMapping("/all/get-blog-by-id")
-    public ResponseEntity<?> getBlogById(@RequestParam Long id){
-        Blog blog = blogService.getBlogById(id);
-        return new ResponseEntity<>(blog, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/blog-manager/findbyid")
-    public ResponseEntity<?> findById(@RequestParam Long id){
-        Blog blog = blogService.findById(id);
-        return new ResponseEntity<>(blog, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/blog-manager/find-all")
-    public ResponseEntity<?> findAll(Pageable pageable){
-        Page<Blog> blog = blogService.findAllBlog(pageable);
-        return new ResponseEntity<>(blog, HttpStatus.CREATED);
-    }
-
     @DeleteMapping("/all/delete")
     public ResponseEntity<?> delete(@RequestParam Long blogId){
         String mess = blogService.deleteBlog(blogId);
         return new ResponseEntity<>(mess, HttpStatus.OK);
+    }
+
+    @GetMapping("/all/get-blog-by-id")
+    public ResponseEntity<?> getBlogById(@RequestParam Long id){
+        Blog blog = blogService.getBlogById(id);
+        return new ResponseEntity<>(blog, HttpStatus.CREATED);
     }
 
     @GetMapping("/public/get-all-blog")
@@ -75,9 +63,9 @@ public class BlogApi {
         return new ResponseEntity<>(page, HttpStatus.CREATED);
 
     }
-    @GetMapping("/blog-manager/admin-search-blog")
-    public ResponseEntity<?> adminSearchBlogByTitle(@RequestParam(required = false) String keywords, Pageable pageable){
-        Page<Blog> page = blogService.adminSearchBlog(keywords,pageable);
+    @GetMapping("/blog-manager/admin-get-all-and-search-blog")
+    public ResponseEntity<?> adminGetAllAndSearchBlog(@RequestParam(required = false) String keywords, Pageable pageable){
+        Page<Blog> page = blogService.adminGetAllAndSearchBlog(keywords,pageable);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 

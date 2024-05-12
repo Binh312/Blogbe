@@ -47,8 +47,14 @@ public class CategoryApi {
     }
 
     @GetMapping("/public/get-all-and-search-category")
-    public ResponseEntity<?> getTop5Category(String name, Pageable pageable){
+    public ResponseEntity<?> getAllCategory(String name, Pageable pageable){
         Page<Category> page = categoryService.getAllCategory(name,pageable);
+        return new ResponseEntity<>(page, HttpStatus.OK);
+    }
+
+    @GetMapping("/public/get-Top5-category")
+    public ResponseEntity<?> getTop5Category(Pageable pageable){
+        Page<Category> page = categoryService.getTop5Category(pageable);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 }

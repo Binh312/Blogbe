@@ -24,6 +24,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Page<Category> findByType(CategoryType type, Pageable pageable);
 
     @Query("select c from Category c order by c.numBlog desc")
+    Page<Category> getTop5Category(Pageable pageable);
+
+    @Query("select c from Category c")
     Page<Category> getAllCategory(Pageable pageable);
 
     @Query("select c from Category c where c.name like %?1%")

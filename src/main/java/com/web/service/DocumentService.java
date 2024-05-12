@@ -200,7 +200,7 @@ public class DocumentService {
         return documentRepository.getDocumentUnactived(pageable);
     }
 
-    public Page<Document> searchDocumentActived(String keywords, Pageable pageable){
+    public Page<Document> getAllAndSearchDocumentActived(String keywords, Pageable pageable){
         if (keywords.isEmpty()) {
             return documentRepository.getDocumentActived(pageable);
         } else {
@@ -208,7 +208,7 @@ public class DocumentService {
         }
     }
 
-    public Page<Document> adminSearchDocument(String keywords, Pageable pageable){
+    public Page<Document> adminGetAllAndSearchDocument(String keywords, Pageable pageable){
         if (keywords.isEmpty()) {
             return documentRepository.getAllDocument(pageable);
         } else {

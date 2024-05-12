@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface BlogRepository extends JpaRepository<Blog, Long>, JpaSpecificationExecutor<Blog> {
 
-    @Query("select b from Blog b where b.id = ?1 and b.actived = true")
+    @Query("select b from Blog b where b.id = ?1")
     Optional<Blog> getBlogById(Long id);
 
     @Query("select b from Blog b where b.user.id = ?1 order by b.createdDate desc, b.createdTime desc")

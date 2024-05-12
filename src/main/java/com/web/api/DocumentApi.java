@@ -37,16 +37,16 @@ public class DocumentApi {
         return new ResponseEntity<>(documentResponse, HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/all/delete")
+    public void deleteDocument(@RequestParam Long documentId){
+        documentService.delete(documentId);
+    }
+
     @GetMapping("/document-manager/get-document-unactived")
     public ResponseEntity<?> getDocumentUnactived(Pageable pageable){
         Page<Document> document = documentService.getDocumentUnactived(pageable);
         Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
         return new ResponseEntity<>(documentResponses, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/all/delete")
-    public void deleteDocument(@RequestParam Long documentId){
-        documentService.delete(documentId);
     }
 
     @GetMapping("/public/findbyid")
@@ -63,16 +63,16 @@ public class DocumentApi {
         return new ResponseEntity<>(documentResponses, HttpStatus.CREATED);
     }
 
-    @GetMapping("/public/search-document-actived")
-    public ResponseEntity<?> searchDocumentActived(@RequestParam(required = false) String keywords, Pageable pageable){
-        Page<Document> document = documentService.searchDocumentActived(keywords,pageable);
+    @GetMapping("/public/get-all-and-search-document-actived")
+    public ResponseEntity<?> getAllAndSearchDocumentActived(@RequestParam(required = false) String keywords, Pageable pageable){
+        Page<Document> document = documentService.getAllAndSearchDocumentActived(keywords,pageable);
         Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
         return new ResponseEntity<>(documentResponses, HttpStatus.CREATED);
     }
 
-    @GetMapping("/document-manager/admin-search-document")
-    public ResponseEntity<?> adminSearchDocument(@RequestParam(required = false) String keywords, Pageable pageable){
-        Page<Document> document = documentService.adminSearchDocument(keywords,pageable);
+    @GetMapping("/document-manager/admin-get-all-and-search-document")
+    public ResponseEntity<?> adminGetAllAndSearchDocument(@RequestParam(required = false) String keywords, Pageable pageable){
+        Page<Document> document = documentService.adminGetAllAndSearchDocument(keywords,pageable);
         Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
         return new ResponseEntity<>(documentResponses, HttpStatus.CREATED);
     }
@@ -90,6 +90,13 @@ public class DocumentApi {
         return new ResponseEntity<>(activeStatuse, HttpStatus.CREATED);
     }
 
+    @GetMapping("/public/get-document-by-subject")
+    public ResponseEntity<?> getDocumentBySubject(@RequestParam Long subjectId,Pageable pageable){
+        Page<Document> document = documentService.getDocumentBySubject(subjectId,pageable);
+        Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
+        return new ResponseEntity<>(documentResponses, HttpStatus.OK);
+    }
+
 //    @GetMapping("/public/get-document-by-department")
 //    public ResponseEntity<?> getDocumentByDepartment(@RequestParam Long departmentId,Pageable pageable){
 //        Page<Document> documentPage = documentService.getDocumentByDepartment(departmentId,pageable);
@@ -102,10 +109,4 @@ public class DocumentApi {
 //        return new ResponseEntity<>(documentPage, HttpStatus.OK);
 //    }
 
-    @GetMapping("/public/get-document-by-subject")
-    public ResponseEntity<?> getDocumentBySubject(@RequestParam Long subjectId,Pageable pageable){
-        Page<Document> document = documentService.getDocumentBySubject(subjectId,pageable);
-        Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
-        return new ResponseEntity<>(documentResponses, HttpStatus.OK);
-    }
 }
