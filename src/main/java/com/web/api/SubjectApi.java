@@ -1,6 +1,5 @@
 package com.web.api;
 
-import com.web.dto.response.SpecializeResponse;
 import com.web.dto.response.SubjectResponse;
 import com.web.entity.Subject;
 import com.web.service.SubjectService;
@@ -11,9 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("/api/subject")
 @CrossOrigin
@@ -22,16 +18,9 @@ public class SubjectApi {
     @Autowired
     private SubjectService subjectService;
 
-    @GetMapping("/public/get-all-subject")
-    public ResponseEntity<?> getAllSubject(Pageable pageable){
-        Page<Subject> page = subjectService.getAllSubject(pageable);
-        Page<SubjectResponse> subjectResponses = page.map(SubjectResponse::converterSubjectToSubjectResponse);
-        return new ResponseEntity<>(subjectResponses, HttpStatus.OK);
-    }
-
-    @GetMapping("/public/find-subject-by-name")
-    public ResponseEntity<?> findSubjectsByName(@RequestBody String nameSubject, Pageable pageable){
-        Page<Subject> page = subjectService.findSubjectsByName(nameSubject,pageable);
+    @GetMapping("/public/get-all-and-find-subject-by-name")
+    public ResponseEntity<?> getAllAndFindSubjectsByName(@RequestParam(required = false) String keywords, Pageable pageable){
+        Page<Subject> page = subjectService.getAllAndFindSubjectsByName(keywords,pageable);
         Page<SubjectResponse> subjectResponses = page.map(SubjectResponse::converterSubjectToSubjectResponse);
         return new ResponseEntity<>(subjectResponses, HttpStatus.OK);
     }

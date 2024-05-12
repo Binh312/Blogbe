@@ -15,6 +15,9 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
     @Query("select sbj from Subject sbj")
     Page<Subject> getAllSubject(Pageable pageable);
 
+    @Query("select sbj from Subject sbj where sbj.nameSubject like %?1% or sbj.codeSubject like %?1%")
+    Page<Subject> getAllAndFindSubjectsByName(String keywords, Pageable pageable);
+
     @Query("select sbj from Subject sbj " +
             "join Specialize s on sbj.specialize.id = s.id " +
             "join Department d on s.department.id = d.id " +
@@ -27,7 +30,5 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
             "where d.id = ?1 and s.id = ?2")
     Page<Subject> getSubjectsByDepartmentAndSpecialize(Long departmentId, Long specializeId, Pageable pageable);
 
-    @Query("select sbj from Subject sbj where sbj.nameSubject like %?1% or sbj.codeSubject like %?1%")
-    Page<Subject> findSubjectsByName(String keywords, Pageable pageable);
 
 }

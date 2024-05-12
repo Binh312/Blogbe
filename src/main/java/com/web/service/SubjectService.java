@@ -31,8 +31,12 @@ public class SubjectService {
         return subjectRepository.getAllSubject(pageable);
     }
 
-    public Page<Subject> findSubjectsByName(String nameSubject, Pageable pageable){
-        return subjectRepository.findSubjectsByName(nameSubject,pageable);
+    public Page<Subject> getAllAndFindSubjectsByName(String nameSubject, Pageable pageable){
+        if (nameSubject.isEmpty()){
+            return subjectRepository.getAllSubject(pageable);
+        } else {
+            return subjectRepository.getAllAndFindSubjectsByName(nameSubject,pageable);
+        }
     }
 
     public Page<Subject> getSubjectByDepartmentAndSpecialize(Long departmentId, Long specializeId, Pageable pageable){

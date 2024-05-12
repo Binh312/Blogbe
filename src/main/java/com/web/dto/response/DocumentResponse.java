@@ -1,15 +1,12 @@
 package com.web.dto.response;
 
 import com.web.entity.Document;
-import com.web.entity.Subject;
 import com.web.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
