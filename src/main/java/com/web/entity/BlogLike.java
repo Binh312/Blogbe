@@ -25,4 +25,6 @@ public class BlogLike {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+
 }

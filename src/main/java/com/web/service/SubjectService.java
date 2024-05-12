@@ -27,15 +27,16 @@ public class SubjectService {
     @Autowired
     private DepartmentRepository departmentRepository;
 
-    public Page<Subject> getAllSubject(Pageable pageable){
-        return subjectRepository.getAllSubject(pageable);
-    }
+    public Page<Subject> getAllSubjects(String nameSubject, Long departmentId, Long specializeId, Pageable pageable){
 
-    public Page<Subject> getAllAndFindSubjectsByName(String nameSubject, Pageable pageable){
-        if (nameSubject.isEmpty()){
+        if (nameSubject.isEmpty() && departmentId == null && specializeId == null){
             return subjectRepository.getAllSubject(pageable);
+        } else if (nameSubject.isEmpty() && specializeId == null){
+            return subjectRepository.getSubjectsByDepartment(departmentId,pageable);
+        } else if (nameSubject.isEmpty()){
+            return subjectRepository.getSubjectsByDepartmentAndSpecialize(departmentId,specializeId,pageable);
         } else {
-            return subjectRepository.getAllAndFindSubjectsByName(nameSubject,pageable);
+            return subjectRepository.findSubjectsByName(nameSubject,pageable);
         }
     }
 
