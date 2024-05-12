@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -60,7 +61,7 @@ public class UserService {
                 .ifPresent(exist->{
                     throw new MessageException("Tên đăng nhập đã tồn tại", 400);
                 });
-        user.setCreatedDate(new Date(System.currentTimeMillis()));
+        user.setCreatedDate(LocalDate.now());
         user.setActived(true);
         user.setRole("ROLE_USER");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -98,7 +99,7 @@ public class UserService {
 
     public User createByAdmin(User user){
         user.setActived(true);
-        user.setCreatedDate(new Date(System.currentTimeMillis()));
+        user.setCreatedDate(LocalDate.now());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (userRepository.findByUsername(user.getUsername()).isPresent()){
             throw new MessageException("Tên tài khoản đã tồn tại!");

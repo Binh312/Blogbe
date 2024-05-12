@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import javax.print.Doc;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -66,8 +68,8 @@ public class DocumentService {
 
         User user = userUtils.getUserWithAuthority();
         Document document = documentMapper.convertRequestToBlog(request);
-        document.setCreatedDate(new Date(System.currentTimeMillis()));
-        document.setCreatedTime(new Time(System.currentTimeMillis()));
+        document.setCreatedDate(LocalDate.now());
+        document.setCreatedTime(LocalDateTime.now());
         document.setUser(user);
         document.setImage(request.getImage());
         document.setDescription(request.getDescription());

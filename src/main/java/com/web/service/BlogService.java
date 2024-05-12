@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -62,8 +64,8 @@ public class BlogService {
 
         User user = userUtils.getUserWithAuthority();
         Blog blog = blogMapper.convertRequestToBlog(request);
-        blog.setCreatedDate(new Date(System.currentTimeMillis()));
-        blog.setCreatedTime(new Time(System.currentTimeMillis()));
+        blog.setCreatedDate(LocalDate.now());
+        blog.setCreatedTime(LocalDateTime.now());
         blog.setUser(user);
         blog.setNumLike(0);
         blog.setNumComment(0);

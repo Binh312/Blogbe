@@ -1,5 +1,6 @@
 package com.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,6 +8,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,9 +27,11 @@ public class Document {
 
     private String name;
 
-    private Date createdDate;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDate createdDate;
 
-    private Time createdTime;
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalDateTime createdTime;
 
     private String image;
 

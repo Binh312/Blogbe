@@ -1,6 +1,7 @@
 package com.web.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.BatchSize;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.*;
 
 @Entity
@@ -32,7 +34,8 @@ public class User{
 
     private Boolean actived;
 
-    private Date createdDate;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDate createdDate;
 
     private String avatar;
 

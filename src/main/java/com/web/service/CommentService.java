@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -32,8 +34,8 @@ public class CommentService {
 
     public Comment save(CommentRequest request){
         Comment comment = new Comment();
-        comment.setCreatedDate(new Date(System.currentTimeMillis()));
-        comment.setCreatedTime(new Time(System.currentTimeMillis()));
+        comment.setCreatedDate(LocalDate.now());
+        comment.setCreatedTime(LocalDateTime.now());
         comment.setUser(userUtils.getUserWithAuthority());
         comment.setContent(request.getContent());
         Optional<Blog> blog = blogRepository.findById(request.getBlogId());

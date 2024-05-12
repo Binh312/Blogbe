@@ -10,6 +10,8 @@ import lombok.Setter;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -21,9 +23,9 @@ public class DocumentResponse {
 
     private String name;
 
-    private Date createdDate;
+    private LocalDate createdDate;
 
-    private Time createdTime;
+    private LocalDateTime createdTime;
 
     private String image;
 

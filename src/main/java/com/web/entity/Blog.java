@@ -1,5 +1,6 @@
 package com.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
@@ -9,6 +10,8 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -30,9 +33,11 @@ public class Blog {
 
     private String content;
 
-    private Date createdDate;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDate createdDate;
 
-    private Time createdTime;
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalDateTime createdTime;
 
     private Integer numLike;
 
