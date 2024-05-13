@@ -90,6 +90,19 @@ public class DocumentApi {
         return new ResponseEntity<>(documentResponses, HttpStatus.OK);
     }
 
+    @PostMapping("/all/save-or-unsave-document")
+    public ResponseEntity<?> saveOrUnSaveDocument(@RequestParam Long documentId){
+        String mess = documentService.saveOrUnSaveDocument(documentId);
+        return new ResponseEntity<>(mess, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/all/get-document-saved")
+    public ResponseEntity<?> getDocumentSaved(@RequestParam Long userId, Pageable pageable){
+        Page<Document> document = documentService.getDocumentSaved(userId,pageable);
+        Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
+        return new ResponseEntity<>(documentResponses, HttpStatus.OK);
+    }
+
 //    @GetMapping("/public/get-document-by-category")
 //    public ResponseEntity<?> getDocumentByCategory(@RequestParam Long categoryId, Pageable pageable){
 //        Page<Document> document = documentService.getDocumentByCategory(categoryId,pageable);

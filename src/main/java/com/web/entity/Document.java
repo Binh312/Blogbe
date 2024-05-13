@@ -53,6 +53,10 @@ public class Document {
     @JoinColumn(name = "subject_id")
     private Subject subject;
 
+    @OneToMany(mappedBy = "document", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
+    private Set<DocumentUser> documentUsers = new HashSet<>();
+
 //    @OneToMany(mappedBy = "document", cascade = CascadeType.REMOVE)
 //    @JsonManagedReference
 //    private Set<DocumentCategory> documentCategories = new HashSet<>();

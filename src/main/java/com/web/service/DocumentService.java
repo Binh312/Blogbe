@@ -34,6 +34,9 @@ public class DocumentService {
     private DocumentRepository documentRepository;
 
     @Autowired
+    private DocumentUserRepository documentUserRepository;
+
+    @Autowired
     private DocumentFileRepository documentFileRepository;
 
     @Autowired
@@ -218,8 +221,8 @@ public class DocumentService {
         }
     }
 
-    public Page<Document> getDocumentByCategory(Long categoryId, Pageable pageable){
-        return documentRepository.getDocumentByCategory(categoryId,pageable);
+    public Page<Document> getDocumentBySubject(Long subjectId, Pageable pageable){
+        return documentRepository.getDocumentBySubject(subjectId,pageable);
     }
 
     public ActiveStatus activeOrUnactive(Long documentId){
@@ -238,16 +241,41 @@ public class DocumentService {
         }
     }
 
-    public Page<Document> getDocumentBySubject(Long subjectId, Pageable pageable){
-        return documentRepository.getDocumentBySubject(subjectId,pageable);
+    public String saveOrUnSaveDocument(Long documentId){
+        Optional<Document> documentOptional = documentRepository.findById(documentId);
+        if (documentOptional.isEmpty()) {
+            throw new MessageException("Tài liệu không tồn tại!");
+        }
+        List<DocumentUser> documentUsers = documentUserRepository.findAllByDocumentId(documentId);
+        User user = userUtils.getUserWithAuthority();
+
+        for (DocumentUser documentUser: documentUsers) {
+            if (documentId.equals(documentUser.getDocument().getId())) {
+                documentUserRepository.delete(documentUser);
+                return "Đã bỏ lưu tài liệu";
+            }
+        }
+
+        DocumentUser documentUser = new DocumentUser();
+        documentUser.setDocument(documentOptional.get());
+        documentUser.setUser(user);
+        documentUserRepository.save(documentUser);
+        return "Đã lưu lại tài liệu";
     }
 
-    public Page<Document> getDocumentByDepartment(Long departmentId, Pageable pageable){
-        return documentRepository.getDocumentByDepartment(departmentId,pageable);
+    public Page<Document> getDocumentSaved(Long userId, Pageable pageable){
+        return documentRepository.getDocumentSaved(userId,pageable);
     }
 
-    public Page<Document> getDocumentBySpecialize(Long specializeId, Pageable pageable){
-        return documentRepository.getDocumentBySpecialize(specializeId,pageable);
-    }
+//    public Page<Document> getDocumentByDepartment(Long departmentId, Pageable pageable){
+//        return documentRepository.getDocumentByDepartment(departmentId,pageable);
+//    }
+//
+//    public Page<Document> getDocumentBySpecialize(Long specializeId, Pageable pageable){
+//        return documentRepository.getDocumentBySpecialize(specializeId,pageable);
+//    }
 
+//    public Page<Document> getDocumentByCategory(Long categoryId, Pageable pageable){
+//        return documentRepository.getDocumentByCategory(categoryId,pageable);
+//    }
 }

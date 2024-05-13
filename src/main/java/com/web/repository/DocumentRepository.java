@@ -30,25 +30,29 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
             "and d.actived = true order by d.createdDate desc, d.createdTime desc")
     Page<Document> searchDocumentActived(String keywords, Pageable pageable);
 
-    @Query("select d from DocumentCategory d where d.category.id = ?1 and d.document.actived = true")
-    Page<Document> getDocumentByCategory(Long categoryId, Pageable pageable);
-
     @Query("select d from Document d where d.subject.id = ?1 and d.actived = true")
     Page<Document> getDocumentBySubject(Long subjectId, Pageable pageable);
-
-    @Query("select d from Document d " +
-            "join Subject sbj on d.subject.id = sbj.id " +
-            "join Specialize s on sbj.specialize.id = s.id " +
-            "join Department dp on s.department.id = dp.id where dp.id = ?1 and d.actived = true")
-    Page<Document> getDocumentByDepartment(Long departmentId, Pageable pageable);
-
-    @Query("select d from Document d " +
-            "join Subject sbj on d.subject.id = sbj.id " +
-            "join Specialize s on sbj.specialize.id = s.id where s.id = ?1 and d.actived = true")
-    Page<Document> getDocumentBySpecialize(Long specializeId, Pageable pageable);
 
     @Query("select d from Document d where (d.name like %?1% or d.description like %?1% " +
             "or d.user.username like %?1% or d.subject.nameSubject like %?1% or d.subject.codeSubject like %?1% ) " +
             "order by d.createdDate desc, d.createdTime desc")
     Page<Document> adminSearchDocument(String keywords, Pageable pageable);
+
+    @Query("select d from Document d join DocumentUser du on d.id = du.document.id where du.user.id = ?1")
+    Page<Document> getDocumentSaved(Long userId,Pageable pageable);
+
+//    @Query("select d from DocumentCategory d where d.category.id = ?1 and d.document.actived = true")
+//    Page<Document> getDocumentByCategory(Long categoryId, Pageable pageable);
+
+//    @Query("select d from Document d " +
+//            "join Subject sbj on d.subject.id = sbj.id " +
+//            "join Specialize s on sbj.specialize.id = s.id " +
+//            "join Department dp on s.department.id = dp.id where dp.id = ?1 and d.actived = true")
+//    Page<Document> getDocumentByDepartment(Long departmentId, Pageable pageable);
+//
+//    @Query("select d from Document d " +
+//            "join Subject sbj on d.subject.id = sbj.id " +
+//            "join Specialize s on sbj.specialize.id = s.id where s.id = ?1 and d.actived = true")
+//    Page<Document> getDocumentBySpecialize(Long specializeId, Pageable pageable);
+
 }
