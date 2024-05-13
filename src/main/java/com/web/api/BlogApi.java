@@ -63,7 +63,7 @@ public class BlogApi {
         return new ResponseEntity<>(page, HttpStatus.CREATED);
 
     }
-    @GetMapping("/blog-manager/admin-get-all-and-search-blog")
+    @GetMapping("/blog-manager/admin-find-all-blog")
     public ResponseEntity<?> adminGetAllAndSearchBlog(@RequestParam(required = false) String keywords, Pageable pageable){
         Page<Blog> page = blogService.adminGetAllAndSearchBlog(keywords,pageable);
         return new ResponseEntity<>(page, HttpStatus.OK);

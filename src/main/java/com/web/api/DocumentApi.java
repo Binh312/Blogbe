@@ -49,7 +49,7 @@ public class DocumentApi {
         return new ResponseEntity<>(documentResponses, HttpStatus.CREATED);
     }
 
-    @GetMapping("/document-manager/admin-get-all-and-search-document")
+    @GetMapping("/document-manager/admin-find-all-document")
     public ResponseEntity<?> adminGetAllAndSearchDocument(@RequestParam(required = false) String keywords, Pageable pageable){
         Page<Document> document = documentService.adminGetAllAndSearchDocument(keywords,pageable);
         Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
