@@ -21,15 +21,9 @@ public class BlogApi {
     @Autowired
     private BlogService blogService;
 
-    @PostMapping("/all/save")
+    @PostMapping("/all/save-update")
     public ResponseEntity<?> saveOrUpdate(@RequestBody BlogRequest blogRequest){
         Blog blog = blogService.save(blogRequest);
-        return new ResponseEntity<>(blog, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/all/update")
-    public ResponseEntity<?> update(@RequestBody BlogRequest blogRequest){
-        Blog blog = blogService.update(blogRequest);
         return new ResponseEntity<>(blog, HttpStatus.CREATED);
     }
 
@@ -61,7 +55,6 @@ public class BlogApi {
     public ResponseEntity<?> searchBlogByTitle(@RequestParam(required = false) String keywords, Pageable pageable){
         Page<Blog> page = blogService.searchBlogActived(keywords,pageable);
         return new ResponseEntity<>(page, HttpStatus.CREATED);
-
     }
 
     @GetMapping("/blog-manager/admin-find-all-blog")

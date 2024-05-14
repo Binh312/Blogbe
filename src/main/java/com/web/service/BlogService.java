@@ -48,8 +48,74 @@ public class BlogService {
 
     public Blog save(BlogRequest request) {
         if (request.getId() != null) {
-            throw new MessageException("Id must null");
+            Optional<Blog> blogExist = blogRepository.findById(request.getId());
+            if(blogExist.isEmpty()){
+                throw new MessageException("blog: "+request.getId()+" not found");
+            }
+            // nếu user muốn sửa khác với user đăng thì báo lỗi
+            User user = userUtils.getUserWithAuthority();
+
+            if (blogExist.get().getUser().getId() != user.getId() && !user.getRole().equals(Contains.ROLE_ADMIN)
+                    && !user.getRole().equals(Contains.ROLE_BLOG_MANAGER)){
+                throw new MessageException("Không đủ quyền");
+            }
+
+            //Giảm tổng số bài viết trong danh mục
+            List<BlogCategory> blogCategories = blogCategoryRepository.findAllByBlogId(request.getId());
+            List<Category> categories = new ArrayList<>();
+            for (BlogCategory blogCategory: blogCategories){
+                categories.add(blogCategory.getCategory());
+            }
+
+            List<Category> newCategories = new ArrayList<>();
+            for (Category category: categories) {
+                category.setNumBlog(category.getNumBlog() - 1);
+                newCategories.add(category);
+            }
+            categoryRepository.saveAll(newCategories);
+
+            //Tăng tổng số bài viết trong danh mục
+            List<Category> addCategories = new ArrayList<>();
+            // kiểm tra xem có danh mục nào không tồn tại không, nếu có thì hủy hàm, báo lỗi
+            for (Long id : request.getListCategoryId()) {
+                Optional<Category> category = categoryRepository.findById(id);
+                if (category.isEmpty()) {
+                    throw new MessageException("Danh mục :" + id + " không tồn tại");
+                }
+                category.get().setNumBlog(category.get().getNumBlog() + 1);
+                addCategories.add(category.get());
+                categoryRepository.save(category.get());
+            }
+
+            Blog blog = blogMapper.convertRequestToBlog(request);
+            blog.setTitle(request.getTitle());
+            blog.setDescription(request.getDescription());
+            blog.setImage(request.getImage());
+            blog.setContent(request.getContent());
+            blog.setCreatedDate(blogExist.get().getCreatedDate());
+            blog.setCreatedTime(blogExist.get().getCreatedTime());
+            blog.setUser(blogExist.get().getUser());
+            blog.setNumLike(blogExist.get().getNumLike());
+            blog.setNumComment(blogExist.get().getNumComment());
+            if (blogExist.get().getUser().getId() == user.getId() && !user.getRole().equals(Contains.ROLE_ADMIN)
+                    && !user.getRole().equals(Contains.ROLE_BLOG_MANAGER)){
+                blog.setActived(false);
+            } else {
+                blog.setActived(blogExist.get().getActived());
+            }
+            Blog result = blogRepository.save(blog);
+
+            blogCategoryRepository.deleteByBlog(result.getId());
+            for (Category c : addCategories) {
+                BlogCategory blogCategory = new BlogCategory();
+                blogCategory.setCategory(c);
+                blogCategory.setBlog(result);
+                blogCategoryRepository.save(blogCategory);
+            }
+
+            return result;
         }
+
         List<Category> categories = new ArrayList<>();
         // kiểm tra xem có danh mục nào không tồn tại không, nếu có thì hủy hàm, báo lỗi
         for (Long id : request.getListCategoryId()) {
@@ -64,6 +130,10 @@ public class BlogService {
 
         User user = userUtils.getUserWithAuthority();
         Blog blog = blogMapper.convertRequestToBlog(request);
+        blog.setTitle(request.getTitle());
+        blog.setDescription(request.getDescription());
+        blog.setImage(request.getImage());
+        blog.setContent(request.getContent());
         blog.setCreatedDate(LocalDate.now());
         blog.setCreatedTime(LocalDateTime.now());
         blog.setUser(user);
@@ -81,82 +151,6 @@ public class BlogService {
             blogCategoryRepository.save(blogCategory);
         }
 
-//        for (FileDto blogFileDto : request.getLinkFiles()) {
-//            BlogFile blogFile = new BlogFile();
-//            blogFile.setBlog(result);
-//            blogFile.setLinkFile(blogFileDto.getLinkFile());
-//            blogFile.setTypeFile(blogFileDto.getTypeFile());
-//            blogFileRepository.save(blogFile);
-//        }
-        return result;
-    }
-
-    public Blog update(BlogRequest request) {
-        if (request.getId() == null) {
-            throw new MessageException("Id is not null");
-        }
-        Optional<Blog> blogExist = blogRepository.findById(request.getId());
-        if(blogExist.isEmpty()){
-            throw new MessageException("blog: "+request.getId()+" not found");
-        }
-        // nếu user muốn sửa khác với user đăng thì báo lỗi
-        User user = userUtils.getUserWithAuthority();
-
-        if (blogExist.get().getUser().getId() != user.getId() && !user.getRole().equals(Contains.ROLE_ADMIN)
-                && !user.getRole().equals(Contains.ROLE_BLOG_MANAGER)){
-            throw new MessageException("Không đủ quyền");
-        }
-
-        //Giảm tổng số bài viết trong danh mục
-        List<BlogCategory> blogCategories = blogCategoryRepository.findAllByBlogId(request.getId());
-        List<Category> categories = new ArrayList<>();
-        for (BlogCategory blogCategory: blogCategories){
-            categories.add(blogCategory.getCategory());
-        }
-
-        List<Category> newCategories = new ArrayList<>();
-        for (Category category: categories) {
-            category.setNumBlog(category.getNumBlog() - 1);
-            newCategories.add(category);
-        }
-        categoryRepository.saveAll(newCategories);
-
-        //Tăng tổng số bài viết trong danh mục
-        List<Category> addCategories = new ArrayList<>();
-        // kiểm tra xem có danh mục nào không tồn tại không, nếu có thì hủy hàm, báo lỗi
-        for (Long id : request.getListCategoryId()) {
-            Optional<Category> category = categoryRepository.findById(id);
-            if (category.isEmpty()) {
-                throw new MessageException("Danh mục :" + id + " không tồn tại");
-            }
-            category.get().setNumBlog(category.get().getNumBlog() + 1);
-            addCategories.add(category.get());
-            categoryRepository.save(category.get());
-        }
-
-        Blog blog = blogMapper.convertRequestToBlog(request);
-        blog.setCreatedDate(blogExist.get().getCreatedDate());
-        blog.setCreatedTime(blogExist.get().getCreatedTime());
-        blog.setUser(blogExist.get().getUser());
-        blog.setNumLike(blogExist.get().getNumLike());
-        blog.setNumComment(blogExist.get().getNumComment());
-        if (blogExist.get().getUser().getId() == user.getId() && !user.getRole().equals(Contains.ROLE_ADMIN)
-                && !user.getRole().equals(Contains.ROLE_BLOG_MANAGER)){
-            blog.setActived(false);
-        } else {
-            blog.setActived(blogExist.get().getActived());
-        }
-        Blog result = blogRepository.save(blog);
-
-        blogCategoryRepository.deleteByBlog(result.getId());
-        for (Category c : addCategories) {
-            BlogCategory blogCategory = new BlogCategory();
-            blogCategory.setCategory(c);
-            blogCategory.setBlog(result);
-            blogCategoryRepository.save(blogCategory);
-        }
-
-//        blogFileRepository.deleteByBlog(request.getId());
 //        for (FileDto blogFileDto : request.getLinkFiles()) {
 //            BlogFile blogFile = new BlogFile();
 //            blogFile.setBlog(result);
