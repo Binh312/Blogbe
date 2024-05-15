@@ -22,68 +22,56 @@ public class BlogApi {
     private BlogService blogService;
 
     @PostMapping("/all/save-update")
-    public ResponseEntity<?> saveOrUpdate(@RequestBody BlogRequest blogRequest){
+    public ResponseEntity<?> saveOrUpdate(@RequestBody BlogRequest blogRequest) {
         Blog blog = blogService.save(blogRequest);
         return new ResponseEntity<>(blog, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/all/delete")
-    public ResponseEntity<?> delete(@RequestParam Long blogId){
+    public ResponseEntity<?> delete(@RequestParam Long blogId) {
         String mess = blogService.deleteBlog(blogId);
         return new ResponseEntity<>(mess, HttpStatus.OK);
     }
 
     @GetMapping("/all/get-blog-by-id")
-    public ResponseEntity<?> getBlogById(@RequestParam Long id){
+    public ResponseEntity<?> getBlogById(@RequestParam Long id) {
         Blog blog = blogService.getBlogById(id);
         return new ResponseEntity<>(blog, HttpStatus.CREATED);
     }
 
-    @GetMapping("/public/get-all-blog")
-    public ResponseEntity<?> getBlogActived(Pageable pageable){
-        Page<Blog> page = blogService.getBlogActived(pageable);
+    @GetMapping("/public/get-all-active")
+    public ResponseEntity<?> getBlogActived(@RequestParam(required = false) String keywords, Pageable pageable) {
+        Page<Blog> page = blogService.getBlogActived(keywords, pageable);
         return new ResponseEntity<>(page, HttpStatus.CREATED);
     }
 
-    @GetMapping("/public/get-all-blog-unactived")
-    public ResponseEntity<?> getBlogUnActived(Pageable pageable){
-        Page<Blog> page = blogService.getBlogUnActived(pageable);
+    @GetMapping("/public/get-all-unactive")
+    public ResponseEntity<?> getBlogUnActived(@RequestParam(required = false) String keywords, Pageable pageable) {
+        Page<Blog> page = blogService.getBlogUnActived(keywords, pageable);
         return new ResponseEntity<>(page, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/public/search-blog-actived")
-    public ResponseEntity<?> searchBlogByTitle(@RequestParam(required = false) String keywords, Pageable pageable){
-        Page<Blog> page = blogService.searchBlogActived(keywords,pageable);
-        return new ResponseEntity<>(page, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/blog-manager/admin-find-all-blog")
-    public ResponseEntity<?> adminGetAllAndSearchBlog(@RequestParam(required = false) String keywords, Pageable pageable){
-        Page<Blog> page = blogService.adminGetAllAndSearchBlog(keywords,pageable);
-        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @GetMapping("/public/get-blog-by-category")
-    public ResponseEntity<?> getBlogByCategory(@RequestParam Long categoryId, Pageable pageable){
-        Page<Blog> page = blogService.getBlogByCategory(categoryId,pageable);
+    public ResponseEntity<?> getBlogByCategory(@RequestParam Long categoryId, Pageable pageable) {
+        Page<Blog> page = blogService.getBlogByCategory(categoryId, pageable);
         return new ResponseEntity<>(page, HttpStatus.CREATED);
     }
 
     @GetMapping("/public/get-top10-blog")
-    public ResponseEntity<?> getTop10Blog(Pageable pageable){
+    public ResponseEntity<?> getTop10Blog(Pageable pageable) {
         Page<Blog> blogs = blogService.getTop10Blog(pageable);
         return new ResponseEntity<>(blogs, HttpStatus.OK);
     }
 
-    @PostMapping("/blog-manager/active-or-unacative")
-    public ResponseEntity<?> activeOrUnactive(@RequestParam Long blogId){
+    @PostMapping("/blog-manager/active-or-unactive")
+    public ResponseEntity<?> activeOrUnactive(@RequestParam Long blogId) {
         ActiveStatus activeStatuse = blogService.activeOrUnactive(blogId);
         return new ResponseEntity<>(activeStatuse, HttpStatus.CREATED);
     }
 
     @GetMapping("/all/get-blog-by-user")
-    public ResponseEntity<?> getBlogByUser(@RequestParam Long userId, Pageable pageable){
-        Page<Blog> page = blogService.getBlogByUser(userId,pageable);
+    public ResponseEntity<?> getBlogByUser(@RequestParam Long userId, Pageable pageable) {
+        Page<Blog> page = blogService.getBlogByUser(userId, pageable);
         return new ResponseEntity<>(page, HttpStatus.CREATED);
     }
 

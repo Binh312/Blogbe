@@ -19,9 +19,6 @@ public interface BlogRepository extends JpaRepository<Blog, Long>, JpaSpecificat
     @Query("select b from Blog b where b.user.id = ?1 order by b.createdDate desc, b.createdTime desc")
     Page<Blog> getBlogByUser(Long userId, Pageable pageable);
 
-    @Query("select b from Blog b order by b.createdDate desc, b.createdTime desc")
-    Page<Blog> findAllBlog(Pageable pageable);
-
     @Query("select b from Blog b where b.actived = true order by b.createdDate desc, b.createdTime desc")
     Page<Blog> getBlogActived(Pageable pageable);
 
@@ -32,6 +29,10 @@ public interface BlogRepository extends JpaRepository<Blog, Long>, JpaSpecificat
             "and b.actived = true order by b.createdDate desc, b.createdTime desc")
     Page<Blog> searchBlogActived(String keywords, Pageable pageable);
 
+    @Query("select b from Blog b where (b.title like %?1% or b.description like %?1% or b.content like %?1% or b.user.username like %?1%) " +
+            "and b.actived = false order by b.createdDate desc, b.createdTime desc")
+    Page<Blog> searchBlogUnActived(String keywords, Pageable pageable);
+
     @Query("select b from Blog b " +
             "join BlogCategory bcate on b.id = bcate.blog.id " +
             "join Category c on bcate.category.id = c.id " +
@@ -40,8 +41,4 @@ public interface BlogRepository extends JpaRepository<Blog, Long>, JpaSpecificat
 
     @Query(value = "select b from Blog b order by (b.numLike + b.numComment) desc")
     Page<Blog> getTop10Blog(Pageable pageable);
-
-    @Query("select b from Blog b where (b.title like %?1% or b.description like %?1% or b.content like %?1% or b.user.username like %?1%) " +
-            "order by b.createdDate desc, b.createdTime desc")
-    Page<Blog> adminSearchBlog(String keywords, Pageable pageable);
 }

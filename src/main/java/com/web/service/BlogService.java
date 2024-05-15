@@ -213,19 +213,19 @@ public class BlogService {
         return blogRepository.getBlogByUser(userId,pageable);
     }
 
-    public Page<Blog> getBlogActived(Pageable pageable){
-        return blogRepository.getBlogActived(pageable);
-    }
-
-    public Page<Blog> getBlogUnActived(Pageable pageable){
-        return blogRepository.getBlogUnActived(pageable);
-    }
-
-    public Page<Blog> searchBlogActived(String keywords,Pageable pageable){
+    public Page<Blog> getBlogActived(String keywords, Pageable pageable){
         if (keywords.isEmpty()) {
             return blogRepository.getBlogActived(pageable);
         } else {
             return blogRepository.searchBlogActived(keywords,pageable);
+        }
+    }
+
+    public Page<Blog> getBlogUnActived(String keywords, Pageable pageable){
+        if (keywords.isEmpty()) {
+            return blogRepository.getBlogUnActived(pageable);
+        } else {
+            return blogRepository.searchBlogUnActived(keywords,pageable);
         }
     }
 
@@ -250,14 +250,6 @@ public class BlogService {
             blog.get().setActived(true);
             blogRepository.save(blog.get());
             return ActiveStatus.DA_MO_KHOA;
-        }
-    }
-
-    public Page<Blog> adminGetAllAndSearchBlog(String keywords, Pageable pageable){
-        if (keywords.isEmpty()){
-            return blogRepository.findAllBlog(pageable);
-        } else {
-            return blogRepository.adminSearchBlog(keywords,pageable);
         }
     }
 }
