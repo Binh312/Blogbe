@@ -13,9 +13,6 @@ import java.util.Optional;
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long> {
 
-    @Query("select d from Document d order by d.createdDate desc, d.createdTime desc")
-    Page<Document> getAllDocument(Pageable pageable);
-
     @Query("select d from Document d where d.actived = true order by d.numView desc")
     Page<Document> getTop5Document(Pageable pageable);
 
@@ -30,13 +27,13 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
             "and d.actived = true order by d.createdDate desc, d.createdTime desc")
     Page<Document> searchDocumentActived(String keywords, Pageable pageable);
 
-    @Query("select d from Document d where d.subject.id = ?1 and d.actived = true")
-    Page<Document> getDocumentBySubject(Long subjectId, Pageable pageable);
-
     @Query("select d from Document d where (d.name like %?1% or d.description like %?1% " +
             "or d.user.username like %?1% or d.subject.nameSubject like %?1% or d.subject.codeSubject like %?1% ) " +
-            "order by d.createdDate desc, d.createdTime desc")
-    Page<Document> adminSearchDocument(String keywords, Pageable pageable);
+            "and d.actived = false order by d.createdDate desc, d.createdTime desc")
+    Page<Document> searchDocumentUnActived(String keywords, Pageable pageable);
+
+    @Query("select d from Document d where d.subject.id = ?1 and d.actived = true")
+    Page<Document> getDocumentBySubject(Long subjectId, Pageable pageable);
 
     @Query("select d from Document d join DocumentUser du on d.id = du.document.id where du.user.id = ?1")
     Page<Document> getDocumentSaved(Long userId,Pageable pageable);

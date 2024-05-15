@@ -52,9 +52,9 @@ public class Blog {
     @OneToMany(mappedBy = "blog", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<BlogCategory> blogCategories;
 
-//    @OneToMany(mappedBy = "blog", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-//    private Set<BlogFile> blogFiles;
-
     @OneToMany(mappedBy = "blog", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<BlogLike> blogLikes;
+
+//    @OneToMany(mappedBy = "blog", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+//    private Set<BlogFile> blogFiles;
 }

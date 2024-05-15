@@ -23,37 +23,23 @@ public class DocumentApi {
     @Autowired
     private DocumentService documentService;
 
-    @PostMapping("/all/save")
+    @PostMapping("/all/save-update")
     public ResponseEntity<?> saveDocument(@RequestBody DocumentRequest documentRequest){
         Document document = documentService.save(documentRequest);
         DocumentResponse documentResponse = DocumentResponse.converterDocumentToDocumentResponse(document);
         return new ResponseEntity<>(documentResponse, HttpStatus.CREATED);
     }
 
-    @PostMapping("/all/update")
-    public ResponseEntity<?> updateDocument(@RequestBody DocumentRequest documentRequest,@RequestParam Long Id){
-        Document document = documentService.update(documentRequest, Id);
-        DocumentResponse documentResponse = DocumentResponse.converterDocumentToDocumentResponse(document);
-        return new ResponseEntity<>(documentResponse, HttpStatus.CREATED);
-    }
+//    @PostMapping("/all/update")
+//    public ResponseEntity<?> updateDocument(@RequestBody DocumentRequest documentRequest,@RequestParam Long Id){
+//        Document document = documentService.update(documentRequest, Id);
+//        DocumentResponse documentResponse = DocumentResponse.converterDocumentToDocumentResponse(document);
+//        return new ResponseEntity<>(documentResponse, HttpStatus.CREATED);
+//    }
 
     @DeleteMapping("/all/delete")
     public void deleteDocument(@RequestParam Long documentId){
         documentService.delete(documentId);
-    }
-
-    @GetMapping("/document-manager/get-document-unactived")
-    public ResponseEntity<?> getDocumentUnactived(Pageable pageable){
-        Page<Document> document = documentService.getDocumentUnactived(pageable);
-        Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
-        return new ResponseEntity<>(documentResponses, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/document-manager/admin-find-all-document")
-    public ResponseEntity<?> adminGetAllAndSearchDocument(@RequestParam(required = false) String keywords, Pageable pageable){
-        Page<Document> document = documentService.adminGetAllAndSearchDocument(keywords,pageable);
-        Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
-        return new ResponseEntity<>(documentResponses, HttpStatus.CREATED);
     }
 
     @PostMapping("/document-manager/active-or-unacative")
@@ -76,31 +62,28 @@ public class DocumentApi {
         return new ResponseEntity<>(documentResponses, HttpStatus.CREATED);
     }
 
-    @GetMapping("/public/get-all-and-search-document-actived")
-    public ResponseEntity<?> getAllAndSearchDocumentActived(@RequestParam(required = false) String keywords, Pageable pageable){
-        Page<Document> document = documentService.getAllAndSearchDocumentActived(keywords,pageable);
+    @GetMapping("/public/get-all-active")
+    public ResponseEntity<?> getAllAndSearchDocumentActived(@RequestParam(required = false) String keywords,
+                                                            @RequestParam(required = false) Long subjectId,
+                                                            @RequestParam(required = false) Long userId,Pageable pageable){
+        Page<Document> document = documentService.getAllActived(keywords,subjectId,userId,pageable);
         Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
         return new ResponseEntity<>(documentResponses, HttpStatus.CREATED);
     }
 
-    @GetMapping("/public/get-document-by-subject")
-    public ResponseEntity<?> getDocumentBySubject(@RequestParam Long subjectId,Pageable pageable){
-        Page<Document> document = documentService.getDocumentBySubject(subjectId,pageable);
+    @GetMapping("/public/get-all-unactive")
+    public ResponseEntity<?> getAllAndSearchDocumentUnActived(@RequestParam(required = false) String keywords,
+                                                              @RequestParam(required = false) Long subjectId,
+                                                              Pageable pageable){
+        Page<Document> document = documentService.getAllUnactived(keywords,subjectId,pageable);
         Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
-        return new ResponseEntity<>(documentResponses, HttpStatus.OK);
+        return new ResponseEntity<>(documentResponses, HttpStatus.CREATED);
     }
 
     @PostMapping("/all/save-or-unsave-document")
     public ResponseEntity<?> saveOrUnSaveDocument(@RequestParam Long documentId){
         String mess = documentService.saveOrUnSaveDocument(documentId);
         return new ResponseEntity<>(mess, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/all/get-document-saved")
-    public ResponseEntity<?> getDocumentSaved(@RequestParam Long userId, Pageable pageable){
-        Page<Document> document = documentService.getDocumentSaved(userId,pageable);
-        Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
-        return new ResponseEntity<>(documentResponses, HttpStatus.OK);
     }
 
 //    @GetMapping("/public/get-document-by-category")

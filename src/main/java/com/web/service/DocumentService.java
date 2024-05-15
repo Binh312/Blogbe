@@ -1,7 +1,6 @@
 package com.web.service;
 
 import com.web.dto.request.DocumentRequest;
-import com.web.dto.request.FileDto;
 import com.web.entity.*;
 import com.web.enums.ActiveStatus;
 import com.web.exception.MessageException;
@@ -11,17 +10,10 @@ import com.web.utils.Contains;
 import com.web.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import javax.print.Doc;
-import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,22 +44,42 @@ public class DocumentService {
     private DocumentCategoryRepository documentCategoryRepository;
 
     public Document save(DocumentRequest request){
+        if (request.getId() != null){
+            Optional<Document> documentOptional = documentRepository.findById(request.getId());
+            if (documentOptional.isEmpty()){
+                throw new MessageException("Document không tồn tại");
+            }
+            Optional<Subject> subjectOptional = subjectRepository.findById(request.getSubjectId());
+            if (subjectOptional.isEmpty()){
+                throw new MessageException("Môn học không tồn tại");
+            }
+
+            User user = userUtils.getUserWithAuthority();
+            Document document = documentMapper.convertRequestToBlog(request);
+            document.setCreatedDate(LocalDate.now());
+            document.setCreatedTime(LocalDateTime.now());
+            document.setUser(user);
+            document.setNumView(documentOptional.get().getNumView());
+            document.setName(request.getName());
+            document.setImage(request.getImage());
+            document.setDescription(request.getDescription());
+            document.setLinkFile(request.getLinkFile());
+            document.setNameSubject(subjectOptional.get().getNameSubject());
+            document.setSubject(subjectOptional.get());
+            if (documentOptional.get().getUser().getId() == user.getId() && !user.getRole().equals(Contains.ROLE_ADMIN)
+                    && !user.getRole().equals(Contains.ROLE_DOCUMENT_MANAGER)){
+                document.setActived(false);
+            } else {
+                document.setActived(documentOptional.get().getActived());
+            }
+
+            return documentRepository.save(document);
+        }
+
         Optional<Subject> subjectOptional = subjectRepository.findById(request.getSubjectId());
         if (subjectOptional.isEmpty()){
             throw new MessageException("Môn học không tồn tại");
         }
-//        List<Category> categories = new ArrayList<>();
-//        for (long id : request.getListCategoryId()){
-//            Optional<Category> category = categoryRepository.findById(id);
-//            if (category.isEmpty()){
-//                throw new MessageException("Danh mục : " + id +"không tồn tại");
-//            }
-//            categories.add(category.get());
-//        }
-//
-//        if (request.getLinkFiles().isEmpty()){
-//            throw new MessageException("Không có file nào!");
-//        }
 
         User user = userUtils.getUserWithAuthority();
         Document document = documentMapper.convertRequestToBlog(request);
@@ -85,27 +97,6 @@ public class DocumentService {
             document.setActived(true);
         }
 
-//        List<DocumentCategory> documentCategories = new ArrayList<>();
-//        for (Category c: categories){
-//            DocumentCategory documentCategory = new DocumentCategory();
-//            documentCategory.setCategory(c);
-//            documentCategory.setDocument(result);
-//            documentCategories.add(documentCategory);
-//        }
-//        documentCategoryRepository.saveAll(documentCategories);
-//
-//        List<DocumentFile> documentFiles = new ArrayList<>();
-//        for (FileDto fileDto: request.getLinkFiles()){
-//            DocumentFile documentFile = new DocumentFile();
-//            documentFile.setDocument(result);
-//            documentFile.setLinkFile(fileDto.getLinkFile());
-//            documentFile.setFileName(fileDto.getFileName());
-//            documentFile.setFileSize(fileDto.getFileSize());
-//            documentFile.setFileType(fileDto.getTypeFile());
-//            documentFiles.add(documentFile);
-//        }
-//        documentFileRepository.saveAll(documentFiles);
-
         return documentRepository.save(document);
     }
 
@@ -122,14 +113,6 @@ public class DocumentService {
             throw new MessageException("Môn học không tồn tại");
         }
 
-//        List<Category> categories = new ArrayList<>();
-//        for (long categoryid : request.getListCategoryId()){
-//            Optional<Category> category = categoryRepository.findById(categoryid);
-//            if (category.isEmpty()){
-//                throw new MessageException("Danh mục : " + categoryid +"không tồn tại");
-//            }
-//            categories.add(category.get());
-//        }
         User user = userUtils.getUserWithAuthority();
         Document document = documentMapper.convertRequestToBlog(request);
         document.setCreatedDate(documentOptional.get().getCreatedDate());
@@ -145,28 +128,6 @@ public class DocumentService {
         } else {
             document.setActived(documentOptional.get().getActived());
         }
-//        documentCategoryRepository.deleteByDocument(document.get().getId());
-
-//        List<DocumentCategory> documentCategories = new ArrayList<>();
-//        for (Category c: categories){
-//            DocumentCategory documentCategory = new DocumentCategory();
-//            documentCategory.setCategory(c);
-//            documentCategory.setDocument(document.get());
-//            documentCategories.add(documentCategory);
-//        }
-//        documentCategoryRepository.saveAll(documentCategories);
-
-//        List<DocumentFile> documentFiles = new ArrayList<>();
-//        for (FileDto fileDto: request.getLinkFiles()){
-//            DocumentFile documentFile = new DocumentFile();
-//            documentFile.setDocument(document.get());
-//            documentFile.setLinkFile(fileDto.getLinkFile());
-//            documentFile.setFileName(fileDto.getFileName());
-//            documentFile.setFileSize(fileDto.getFileSize());
-//            documentFile.setFileType(fileDto.getTypeFile());
-//            documentFiles.add(documentFile);
-//        }
-//        documentFileRepository.saveAll(documentFiles);
 
         return documentRepository.save(document);
     }
@@ -201,28 +162,28 @@ public class DocumentService {
         return documentRepository.getTop5Document(pageable);
     }
 
-    public Page<Document> getDocumentUnactived(Pageable pageable){
-        return documentRepository.getDocumentUnactived(pageable);
-    }
-
-    public Page<Document> getAllAndSearchDocumentActived(String keywords, Pageable pageable){
-        if (keywords.isEmpty()) {
-            return documentRepository.getDocumentActived(pageable);
+    public Page<Document> getAllUnactived(String keywords, Long subjectId, Pageable pageable){
+        if (keywords.isEmpty() && subjectId == null) {
+            return documentRepository.getDocumentUnactived(pageable);
+        } else if (keywords.isEmpty()){
+            return documentRepository.getDocumentBySubject(subjectId,pageable);
         } else {
-            return documentRepository.searchDocumentActived(keywords,pageable);
+            return documentRepository.searchDocumentUnActived(keywords,pageable);
         }
     }
 
-    public Page<Document> adminGetAllAndSearchDocument(String keywords, Pageable pageable){
-        if (keywords.isEmpty()) {
-            return documentRepository.getAllDocument(pageable);
+    public Page<Document> getAllActived(String keywords, Long subjectId, Long userId, Pageable pageable){
+        if (userId == null){
+            if (keywords.isEmpty() && subjectId == null) {
+                return documentRepository.getDocumentActived(pageable);
+            } else if (keywords.isEmpty()){
+                return documentRepository.getDocumentBySubject(subjectId,pageable);
+            } else {
+                return documentRepository.searchDocumentActived(keywords,pageable);
+            }
         } else {
-            return documentRepository.adminSearchDocument(keywords,pageable);
+            return documentRepository.getDocumentSaved(userId,pageable);
         }
-    }
-
-    public Page<Document> getDocumentBySubject(Long subjectId, Pageable pageable){
-        return documentRepository.getDocumentBySubject(subjectId,pageable);
     }
 
     public ActiveStatus activeOrUnactive(Long documentId){
@@ -261,10 +222,6 @@ public class DocumentService {
         documentUser.setUser(user);
         documentUserRepository.save(documentUser);
         return "Đã lưu lại tài liệu";
-    }
-
-    public Page<Document> getDocumentSaved(Long userId, Pageable pageable){
-        return documentRepository.getDocumentSaved(userId,pageable);
     }
 
 //    public Page<Document> getDocumentByDepartment(Long departmentId, Pageable pageable){

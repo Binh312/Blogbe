@@ -24,6 +24,7 @@ public class BlogLike {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
 

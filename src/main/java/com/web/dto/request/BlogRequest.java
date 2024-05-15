@@ -21,7 +21,5 @@ public class BlogRequest {
 
     private String content;
 
-//    private List<FileDto> linkFiles = new ArrayList<>();
-
     private List<Long> listCategoryId = new ArrayList<>();
 }
