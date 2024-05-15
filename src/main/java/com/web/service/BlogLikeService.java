@@ -48,6 +48,6 @@ public class BlogLikeService {
     }
 
     public List<BlogLike> findByBlog(Long blogId){
-        return blogLikeRepository.findByBlog(blogId);
+        return blogLikeRepository.getByBlog(blogId);
     }
 }

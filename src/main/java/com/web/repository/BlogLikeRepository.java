@@ -13,5 +13,5 @@ public interface BlogLikeRepository extends JpaRepository<BlogLike, Long> {
     Optional<BlogLike> findByUserAndBlog(Long userId, Long blogId);
 
     @Query("select b from BlogLike b where b.blog.id = ?1")
-    List<BlogLike> findByBlog(Long blogId);
+    List<BlogLike> getByBlog(Long blogId);
 }

@@ -6,10 +6,7 @@ import com.web.entity.*;
 import com.web.enums.ActiveStatus;
 import com.web.exception.MessageException;
 import com.web.mapper.BlogMapper;
-import com.web.repository.BlogCategoryRepository;
-import com.web.repository.BlogFileRepository;
-import com.web.repository.BlogRepository;
-import com.web.repository.CategoryRepository;
+import com.web.repository.*;
 import com.web.utils.Contains;
 import com.web.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +39,12 @@ public class BlogService {
 
     @Autowired
     private BlogMapper blogMapper;
+
+    @Autowired
+    private BlogLikeRepository blogLikeRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Autowired
     private UserUtils userUtils;
@@ -187,6 +190,12 @@ public class BlogService {
             newCategories.add(category);
         }
         categoryRepository.saveAll(newCategories);
+
+        List<BlogLike> blogLikes = blogLikeRepository.getByBlog(blogId);
+        blogLikeRepository.deleteAll(blogLikes);
+
+        List<Comment> comments = commentRepository.getByBlog(blogId);
+        commentRepository.deleteAll(comments);
 
         blogRepository.delete(blogOptional.get());
         return "Đã xóa bài viết thành công";
