@@ -39,6 +39,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "question_id")
+    @JsonBackReference
     private Blog blog;
 
     @ManyToOne
