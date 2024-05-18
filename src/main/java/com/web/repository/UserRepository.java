@@ -37,10 +37,13 @@ public interface UserRepository extends JpaRepository<User,Long> {
     Page<User> getUserUnactived(Pageable pageable);
 
     @Query("select u from User u where u.role = ?1")
-    public List<User> getUserByRole(String role);
+    Page<User> findByRole(String role, Pageable pageable);
 
-    @Query("select u from User u where u.username like ?1 or u.fullName like ?1")
-    Page<User> searchByName(String userName, Pageable pageable);
+    @Query("select u from User u where u.username like %?1% or u.fullName like %?1%")
+    Page<User> findByName(String keywords, Pageable pageable);
+
+    @Query("select u from User u where (u.fullName like %?1% or u.username like %?1%) and u.role = ?2")
+    Page<User> findByParamAndRole(String param,String role, Pageable pageable);
 
     @Query(value = "select u.* from chat c inner join users u\n" +
             "where (c.sender = ?1 or c.receiver = ?1) and u.id != ?1 group by u.id", nativeQuery = true)
@@ -49,6 +52,4 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("select u from User u where u.fullName like ?1 or u.username like ?1")
     public Page<User> findByParam(String param, Pageable pageable);
 
-    @Query("select u from User u where (u.fullName like ?1 or u.username like ?1) and u.role = ?2")
-    public Page<User> findByParamAndRole(String param,String role, Pageable pageable);
 }

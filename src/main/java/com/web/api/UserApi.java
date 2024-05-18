@@ -47,21 +47,10 @@ public class UserApi {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @GetMapping("/admin/find-user-by-role")
-    public Page<User> findByRole(Pageable pageable, @RequestParam(value = "role", required = false) String role,
-                                 @RequestParam(value = "search", required = false) String search){
-        if(search == null){
-            search = "";
-        }
-        search = "%"+search+"%";
-        Page<User> result = userService.findByRoleAndParam(pageable,role, search);
-        return result;
-    }
-
     @GetMapping("/admin/lock-user")
     public ResponseEntity<?> lock(@RequestParam(value = "id") Long id){
-        ActiveStatus activeStatus = userService.lockOrUnlock(id);
-        return new ResponseEntity<>(activeStatus, HttpStatus.OK);
+        String mess = userService.lockOrUnlock(id);
+        return new ResponseEntity<>(mess, HttpStatus.OK);
     }
 
     @PostMapping("/update-infor")
@@ -70,15 +59,9 @@ public class UserApi {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @PostMapping("/admin/create-by-admin")
-    public ResponseEntity<?> createByAdmin(@RequestBody User user){
-        User us = userService.createByAdmin(user);
-        return new ResponseEntity<>(us, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/admin/update-by-admin")
-    public ResponseEntity<?> updateByAdmin(@RequestBody User user){
-        User us = userService.updateByAdmin(user);
+    @PostMapping("/admin/create-update")
+    public ResponseEntity<?> saveAndUpdateByAdmin(@RequestBody User user){
+        User us = userService.saveAndUpdateByAdmin(user);
         return new ResponseEntity<>(us, HttpStatus.CREATED);
     }
 
@@ -89,26 +72,9 @@ public class UserApi {
     }
 
     @GetMapping("/admin/get-all-user")
-    public ResponseEntity<?> getAllUser(Pageable pageable){
-        Page<User> page = userService.getAllUser(pageable);
+    public ResponseEntity<?> getAllUser(String userName, String roleName, Boolean active, Pageable pageable){
+        Page<User> page = userService.getAllUser(userName,roleName,active,pageable);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
-    @GetMapping("/admin/get-user-actived")
-    public ResponseEntity<?> getUserActived(Pageable pageable){
-        Page<User> page = userService.getUserActived(pageable);
-        return new ResponseEntity<>(page, HttpStatus.OK);
-    }
-
-    @GetMapping("/admin/get-user-unactived")
-    public ResponseEntity<?> getUserUnactived(Pageable pageable){
-        Page<User> page = userService.getUserUnactived(pageable);
-        return new ResponseEntity<>(page, HttpStatus.OK);
-    }
-
-    @GetMapping("/admin/search-by-name")
-    public ResponseEntity<?> searchByName(String name, Pageable pageable){
-        Page<User> page = userService.searchByName(name,pageable);
-        return new ResponseEntity<>(page, HttpStatus.OK);
-    }
 }

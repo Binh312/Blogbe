@@ -22,7 +22,7 @@ public class Category {
 
     private String image;
 
-    private Integer numBlog;
+    private Integer numBlog = 0;
 
     private CategoryType categoryType;
 }

@@ -1,10 +1,12 @@
 package com.web.service;
 
+import com.web.entity.Blog;
 import com.web.entity.BlogCategory;
 import com.web.entity.Category;
 import com.web.enums.CategoryType;
 import com.web.exception.MessageException;
 import com.web.repository.BlogCategoryRepository;
+import com.web.repository.BlogRepository;
 import com.web.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,17 +26,21 @@ public class CategoryService {
     @Autowired
     private BlogCategoryRepository blogCategoryRepository;
 
+    @Autowired
+    private BlogRepository blogRepository;
+
     public Category saveOrUpdate(Category category){
         if( categoryRepository.findByName(category.getName()).isPresent() && category.getId() == null){
             throw new MessageException("Tên danh mục đã tồn tại");
         }
+
         return categoryRepository.save(category);
     }
 
     public void delete(Long id){
         List<BlogCategory> blogCategories = blogCategoryRepository.findBlogCategoriesByCategoryId(id);
         blogCategoryRepository.deleteAll(blogCategories);
-
+        
         categoryRepository.deleteById(id);
     }
 

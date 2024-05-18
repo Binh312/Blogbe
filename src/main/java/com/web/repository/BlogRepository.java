@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -38,6 +39,12 @@ public interface BlogRepository extends JpaRepository<Blog, Long>, JpaSpecificat
             "join Category c on bcate.category.id = c.id " +
             "where c.id = ?1 and b.actived = true order by b.createdDate desc, b.createdTime desc")
     Page<Blog> getBlogByCategory(Long CategoryId, Pageable pageable);
+
+    @Query("select b from Blog b " +
+            "join BlogCategory bcate on b.id = bcate.blog.id " +
+            "join Category c on bcate.category.id = c.id " +
+            "where c.id = ?1")
+    List<Blog> findBlogByCategory(Long CategoryId);
 
     @Query(value = "select b from Blog b order by (b.numLike + b.numComment) desc")
     Page<Blog> getTop10Blog(Pageable pageable);
