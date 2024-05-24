@@ -15,12 +15,18 @@ public class SpecializeResponse {
 
     private Long id;
 
+    private String codeSpecialize;
+
     private String nameSpecialize;
+
+    private Long departmentId;
 
     public static SpecializeResponse converterSpecializeToSpecializeResponse(Specialize specialize){
         return new SpecializeResponse(
                 specialize.getId(),
-                specialize.getNameSpecialize()
+                specialize.getCodeSpecialize(),
+                specialize.getNameSpecialize(),
+                specialize.getIdDepartment()
         );
     }
 }

@@ -56,7 +56,6 @@ public class Document {
     private Subject subject;
 
     @OneToMany(mappedBy = "document", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
     private Set<DocumentUser> documentUsers = new HashSet<>();
 
 //    @OneToMany(mappedBy = "document", cascade = CascadeType.REMOVE)

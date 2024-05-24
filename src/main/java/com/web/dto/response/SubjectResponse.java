@@ -15,12 +15,18 @@ public class SubjectResponse {
 
     private Long id;
 
+    private String codeSubject;
+
     private String nameSubject;
+
+    private Long connecIdSpecialize;
 
     public static SubjectResponse converterSubjectToSubjectResponse(Subject subject){
         return new SubjectResponse(
                 subject.getId(),
-                subject.getNameSubject()
+                subject.getCodeSubject(),
+                subject.getNameSubject(),
+                subject.getConnecIdSpecialize()
         );
     }
 }

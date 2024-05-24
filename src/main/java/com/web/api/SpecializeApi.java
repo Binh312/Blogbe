@@ -1,5 +1,6 @@
 package com.web.api;
 
+import com.web.dto.request.SpecializeRequest;
 import com.web.dto.response.DepartmentResponse;
 import com.web.dto.response.SpecializeResponse;
 import com.web.entity.Specialize;
@@ -21,13 +22,22 @@ public class SpecializeApi {
     @Autowired
     private SpecializeService specializeService;
 
-    @Autowired
-    private SpecializeRepository specializeRepository;
+    @PostMapping("/document-manager/save-update")
+    public ResponseEntity<?> saveAndUpdateSpecialize(@RequestBody SpecializeRequest specializeRequest){
+        Specialize specialize = specializeService.saveAndUpdateSpecialize(specializeRequest);
+        SpecializeResponse specializeResponse = SpecializeResponse.converterSpecializeToSpecializeResponse(specialize);
+        return new ResponseEntity<>(specializeResponse, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/document-manager/delete")
+    public ResponseEntity<?> deleteSpecialize(@RequestParam Long specializeId){
+        String mess = specializeService.deleteSpecialize(specializeId);
+        return new ResponseEntity<>(mess, HttpStatus.OK);
+    }
 
     @GetMapping("/public/get-specialize-by-department")
     public ResponseEntity<?> getSpecializeByDepartment(@RequestParam Long departmentId){
         List<Specialize> specializes = specializeService.getSpecializeByDepartment(departmentId);
-
         List<SpecializeResponse> specializeResponses = specializes.stream().map(
                 SpecializeResponse::converterSpecializeToSpecializeResponse
         ).collect(Collectors.toList());

@@ -1,5 +1,6 @@
 package com.web.api;
 
+import com.web.dto.request.SubjectRequest;
 import com.web.dto.response.SubjectResponse;
 import com.web.entity.Subject;
 import com.web.service.SubjectService;
@@ -17,6 +18,19 @@ public class SubjectApi {
 
     @Autowired
     private SubjectService subjectService;
+
+    @PostMapping("/document-manager/save-update")
+    public ResponseEntity<?> saveAndUpdateSubject(@RequestBody SubjectRequest subjectRequest){
+        Subject subject = subjectService.saveAndUpdateSubject(subjectRequest);
+        SubjectResponse subjectResponse = SubjectResponse.converterSubjectToSubjectResponse(subject);
+        return new ResponseEntity<>(subjectResponse, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/document-manager/delete")
+    public ResponseEntity<?> deleteSubject(@RequestParam Long subjectId){
+        String mess = subjectService.deleteSubject(subjectId);
+        return new ResponseEntity<>(mess, HttpStatus.OK);
+    }
 
     @GetMapping("/public/get-all-subject")
     public ResponseEntity<?> getAllAndFindSubjectsByName(@RequestParam(required = false) String keywords,

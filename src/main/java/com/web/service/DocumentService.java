@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,19 +44,19 @@ public class DocumentService {
     @Autowired
     private DocumentCategoryRepository documentCategoryRepository;
 
-    public Document save(DocumentRequest request){
-        if (request.getId() != null){
+    public Document save(DocumentRequest request) {
+        if (request.getId() != null) {
             Optional<Document> documentOptional = documentRepository.findById(request.getId());
-            if (documentOptional.isEmpty()){
+            if (documentOptional.isEmpty()) {
                 throw new MessageException("Document không tồn tại");
             }
             Optional<Subject> subjectOptional = subjectRepository.findById(request.getSubjectId());
-            if (subjectOptional.isEmpty()){
+            if (subjectOptional.isEmpty()) {
                 throw new MessageException("Môn học không tồn tại");
             }
 
             User user = userUtils.getUserWithAuthority();
-            Document document = documentMapper.convertRequestToBlog(request);
+            Document document = documentMapper.convertRequestToDocument(request);
             document.setCreatedDate(LocalDate.now());
             document.setCreatedTime(LocalDateTime.now());
             document.setUser(user);
@@ -67,7 +68,7 @@ public class DocumentService {
             document.setNameSubject(subjectOptional.get().getNameSubject());
             document.setSubject(subjectOptional.get());
             if (documentOptional.get().getUser().getId() == user.getId() && !user.getRole().equals(Contains.ROLE_ADMIN)
-                    && !user.getRole().equals(Contains.ROLE_DOCUMENT_MANAGER)){
+                    && !user.getRole().equals(Contains.ROLE_DOCUMENT_MANAGER)) {
                 document.setActived(false);
             } else {
                 document.setActived(documentOptional.get().getActived());
@@ -77,12 +78,12 @@ public class DocumentService {
         }
 
         Optional<Subject> subjectOptional = subjectRepository.findById(request.getSubjectId());
-        if (subjectOptional.isEmpty()){
+        if (subjectOptional.isEmpty()) {
             throw new MessageException("Môn học không tồn tại");
         }
 
         User user = userUtils.getUserWithAuthority();
-        Document document = documentMapper.convertRequestToBlog(request);
+        Document document = documentMapper.convertRequestToDocument(request);
         document.setCreatedDate(LocalDate.now());
         document.setCreatedTime(LocalDateTime.now());
         document.setUser(user);
@@ -93,28 +94,28 @@ public class DocumentService {
         document.setLinkFile(request.getLinkFile());
         document.setNameSubject(subjectOptional.get().getNameSubject());
         document.setSubject(subjectOptional.get());
-        if(user.getRole().equals(Contains.ROLE_ADMIN) || user.getRole().equals(Contains.ROLE_DOCUMENT_MANAGER)){
+        if (user.getRole().equals(Contains.ROLE_ADMIN) || user.getRole().equals(Contains.ROLE_DOCUMENT_MANAGER)) {
             document.setActived(true);
         }
 
         return documentRepository.save(document);
     }
 
-    public Document update(DocumentRequest request, Long id){
-        if (id == null){
+    public Document update(DocumentRequest request, Long id) {
+        if (id == null) {
             throw new MessageException("Id không được null!");
         }
         Optional<Document> documentOptional = documentRepository.findById(id);
-        if (documentOptional.isEmpty()){
+        if (documentOptional.isEmpty()) {
             throw new MessageException("Document không tồn tại");
         }
         Optional<Subject> subjectOptional = subjectRepository.findById(request.getSubjectId());
-        if (subjectOptional.isEmpty()){
+        if (subjectOptional.isEmpty()) {
             throw new MessageException("Môn học không tồn tại");
         }
 
         User user = userUtils.getUserWithAuthority();
-        Document document = documentMapper.convertRequestToBlog(request);
+        Document document = documentMapper.convertRequestToDocument(request);
         document.setCreatedDate(documentOptional.get().getCreatedDate());
         document.setCreatedTime(documentOptional.get().getCreatedTime());
         document.setUser(document.getUser());
@@ -123,7 +124,7 @@ public class DocumentService {
         document.setNameSubject(subjectOptional.get().getNameSubject());
         document.setSubject(subjectOptional.get());
         if (documentOptional.get().getUser().getId() == user.getId() && !user.getRole().equals(Contains.ROLE_ADMIN)
-                && !user.getRole().equals(Contains.ROLE_DOCUMENT_MANAGER)){
+                && !user.getRole().equals(Contains.ROLE_DOCUMENT_MANAGER)) {
             document.setActived(false);
         } else {
             document.setActived(documentOptional.get().getActived());
@@ -132,25 +133,29 @@ public class DocumentService {
         return documentRepository.save(document);
     }
 
-    public void delete(Long id){
+    public String delete(Long id) {
         Optional<Document> document = documentRepository.findById(id);
-        if (document.isEmpty()){
+        if (document.isEmpty()) {
             throw new MessageException("Document không tồn tại");
         }
 
         User user = userUtils.getUserWithAuthority();
 
         if (document.get().getUser().getId() != user.getId() && !user.getRole().equals(Contains.ROLE_ADMIN)
-                && !user.getRole().equals(Contains.ROLE_DOCUMENT_MANAGER)){
+                && !user.getRole().equals(Contains.ROLE_DOCUMENT_MANAGER)) {
             throw new MessageException("Không đủ quyền");
         }
 
+        List<DocumentUser> documentUsers = documentUserRepository.findAllByDocumentId(id);
+        documentUserRepository.deleteAll(documentUsers);
+
         documentRepository.delete(document.get());
+        return "Đã xoá Tài liệu thành công";
     }
 
-    public Document findById(Long id){
+    public Document findById(Long id) {
         Optional<Document> document = documentRepository.findById(id);
-        if (document.isEmpty()){
+        if (document.isEmpty()) {
             throw new MessageException("Document không tồn tại");
         } else {
             document.get().setNumView(document.get().getNumView() + 1);
@@ -158,40 +163,41 @@ public class DocumentService {
         }
     }
 
-    public Page<Document> getTop5Document(Pageable pageable){
+    public Page<Document> getTop5Document(Pageable pageable) {
         return documentRepository.getTop5Document(pageable);
     }
 
-    public Page<Document> getAllUnactived(String keywords, Long subjectId, Pageable pageable){
+    public Page<Document> getAllUnactived(String keywords, Long subjectId, Pageable pageable) {
         if (keywords.isEmpty() && subjectId == null) {
             return documentRepository.getDocumentUnactived(pageable);
-        } else if (keywords.isEmpty()){
-            return documentRepository.getDocumentBySubject(subjectId,pageable);
+        } else if (keywords.isEmpty()) {
+            return documentRepository.getDocumentBySubject(subjectId, pageable);
         } else {
-            return documentRepository.searchDocumentUnActived(keywords,pageable);
+            return documentRepository.searchDocumentUnActived(keywords, pageable);
         }
     }
 
-    public Page<Document> getAllActived(String keywords, Long subjectId, Long userId, Pageable pageable){
-        if (userId == null){
-            if (keywords.isEmpty() && subjectId == null) {
-                return documentRepository.getDocumentActived(pageable);
-            } else if (keywords.isEmpty()){
-                return documentRepository.getDocumentBySubject(subjectId,pageable);
-            } else {
-                return documentRepository.searchDocumentActived(keywords,pageable);
-            }
-        } else {
-            return documentRepository.getDocumentSaved(userId,pageable);
+    public Page<Document> getAllActived(String keywords, Long subjectId, Long userId, Pageable pageable) {
+
+        if (keywords.isEmpty() && subjectId == null && userId == null) {
+            return documentRepository.getDocumentActived(pageable);
+        } else if (keywords.isEmpty() && userId == null) {
+            return documentRepository.getDocumentBySubject(subjectId, pageable);
+        } else if (subjectId == null && userId == null) {
+            return documentRepository.searchDocumentActived(keywords, pageable);
+        } else if (userId == null) {
+            return documentRepository.getDocumentBySubjectAndParam(keywords, subjectId, pageable);
+        } else{
+            return documentRepository.getDocumentSaved(userId, pageable);
         }
     }
 
-    public ActiveStatus activeOrUnactive(Long documentId){
+    public ActiveStatus activeOrUnactive(Long documentId) {
         Optional<Document> document = documentRepository.findById(documentId);
-        if (document.isEmpty()){
+        if (document.isEmpty()) {
             throw new MessageException("document này không tồn tại!");
         }
-        if (document.get().getActived() == true){
+        if (document.get().getActived() == true) {
             document.get().setActived(false);
             documentRepository.save(document.get());
             return ActiveStatus.DA_KHOA;
@@ -202,7 +208,7 @@ public class DocumentService {
         }
     }
 
-    public String saveOrUnSaveDocument(Long documentId){
+    public String saveOrUnSaveDocument(Long documentId) {
         Optional<Document> documentOptional = documentRepository.findById(documentId);
         if (documentOptional.isEmpty()) {
             throw new MessageException("Tài liệu không tồn tại!");
@@ -210,7 +216,7 @@ public class DocumentService {
         List<DocumentUser> documentUsers = documentUserRepository.findAllByDocumentId(documentId);
         User user = userUtils.getUserWithAuthority();
 
-        for (DocumentUser documentUser: documentUsers) {
+        for (DocumentUser documentUser : documentUsers) {
             if (documentId.equals(documentUser.getDocument().getId())) {
                 documentUserRepository.delete(documentUser);
                 return "Đã bỏ lưu tài liệu";

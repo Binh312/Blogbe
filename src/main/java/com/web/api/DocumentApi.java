@@ -30,16 +30,10 @@ public class DocumentApi {
         return new ResponseEntity<>(documentResponse, HttpStatus.CREATED);
     }
 
-//    @PostMapping("/all/update")
-//    public ResponseEntity<?> updateDocument(@RequestBody DocumentRequest documentRequest,@RequestParam Long Id){
-//        Document document = documentService.update(documentRequest, Id);
-//        DocumentResponse documentResponse = DocumentResponse.converterDocumentToDocumentResponse(document);
-//        return new ResponseEntity<>(documentResponse, HttpStatus.CREATED);
-//    }
-
     @DeleteMapping("/all/delete")
-    public void deleteDocument(@RequestParam Long documentId){
-        documentService.delete(documentId);
+    public ResponseEntity<?> deleteDocument(@RequestParam Long documentId){
+        String mess = documentService.delete(documentId);
+        return new ResponseEntity<>(mess, HttpStatus.OK);
     }
 
     @PostMapping("/document-manager/active-or-unacative")

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -35,6 +36,25 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     @Query("select d from Document d where d.subject.id = ?1 and d.actived = true")
     Page<Document> getDocumentBySubject(Long subjectId, Pageable pageable);
 
+    @Query("select d from Document d where d.subject.id = ?1")
+    List<Document> findDocumentBySubject(Long subjectId);
+
+    @Query("select d from Document d " +
+            "join Subject sbj on d.subject.id = sbj.id " +
+            "join Specialize s on sbj.specialize.id = s.id where s.id = ?1")
+    List<Document> findDocumentBySpecialize(Long specializeId);
+
+    @Query("select d from Document d " +
+            "join Subject sbj on d.subject.id = sbj.id " +
+            "join Specialize s on sbj.specialize.id = s.id " +
+            "join Department dpm on s.department.id = dpm.id where dpm.id = ?1")
+    List<Document> findDocumentByDepartment(Long departmentId);
+
+    @Query("select d from Document d where (d.name like %?1% or d.description like %?1% " +
+            "or d.user.username like %?1% or d.subject.nameSubject like %?1% or d.subject.codeSubject like %?1% ) " +
+            "and d.subject.id = ?2")
+    Page<Document> getDocumentBySubjectAndParam(String keywords, Long subjectId, Pageable pageable);
+
     @Query("select d from Document d join DocumentUser du on d.id = du.document.id where du.user.id = ?1")
     Page<Document> getDocumentSaved(Long userId,Pageable pageable);
 
@@ -47,9 +67,6 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
 //            "join Department dp on s.department.id = dp.id where dp.id = ?1 and d.actived = true")
 //    Page<Document> getDocumentByDepartment(Long departmentId, Pageable pageable);
 //
-//    @Query("select d from Document d " +
-//            "join Subject sbj on d.subject.id = sbj.id " +
-//            "join Specialize s on sbj.specialize.id = s.id where s.id = ?1 and d.actived = true")
-//    Page<Document> getDocumentBySpecialize(Long specializeId, Pageable pageable);
+
 
 }

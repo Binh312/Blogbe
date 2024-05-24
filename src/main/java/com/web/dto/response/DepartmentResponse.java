@@ -14,11 +14,14 @@ public class DepartmentResponse {
 
     private Long id;
 
+    private String codeDepartment;
+
     private String nameDepartment;
 
     public static DepartmentResponse converterDepaertmentToDepartmentResponse(Department department){
         return new DepartmentResponse(
                 department.getId(),
+                department.getCodeDepartment(),
                 department.getNameDepartment()
         );
     }

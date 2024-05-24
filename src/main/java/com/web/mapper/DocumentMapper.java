@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DocumentMapper {
 
-    public Document convertRequestToBlog(DocumentRequest request){
+    public Document convertRequestToDocument(DocumentRequest request){
         Document document = new Document();
         document.setId(request.getId());
         document.setName(request.getName());

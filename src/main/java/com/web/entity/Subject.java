@@ -1,5 +1,7 @@
 package com.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,8 +23,11 @@ public class Subject {
 
     private String nameSubject;
 
+    private Long connecIdSpecialize;
+
     @ManyToOne
     @JoinColumn(name = "specialize_id")
+    @JsonBackReference
     private Specialize specialize;
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
