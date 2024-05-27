@@ -73,10 +73,8 @@ public class UserApi {
     }
 
     @GetMapping("/admin/get-all-user")
-    public ResponseEntity<?> getAllUser(@RequestParam String userName,
-                                        @RequestParam String roleName,
-                                        @RequestParam Boolean active, Pageable pageable){
-        Page<User> page = userService.getAllUser(userName,roleName,active,pageable);
+    public ResponseEntity<?> getAllUser(@RequestParam String userName, Pageable pageable){
+        Page<User> page = userService.getAllUser(userName,pageable);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 

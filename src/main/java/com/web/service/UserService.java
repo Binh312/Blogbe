@@ -188,19 +188,11 @@ public class UserService {
         return user.get();
     }
 
-    public Page<User> getAllUser(String userName, String roleName, Boolean active, Pageable pageable){
-        if (userName.isEmpty() && roleName.isEmpty() && active == null) {
+    public Page<User> getAllUser(String userName, Pageable pageable){
+        if (userName.isEmpty()) {
             return userRepository.getAllUser(pageable);
-        } else if (userName.isEmpty() && roleName.isEmpty() && active) {
-            return userRepository.getUserActived(pageable);
-        } else if (userName.isEmpty() && roleName.isEmpty() && !active) {
-            return userRepository.getUserUnactived(pageable);
-        } else if (userName.isEmpty() && active == null) {
-            return userRepository.findByRole(roleName,pageable);
-        } else if (roleName == null && active == null) {
-            return userRepository.findByName(userName,pageable);
         } else {
-            return userRepository.findByParamAndRole(userName,roleName,pageable);
+            return userRepository.findByName(userName,pageable);
         }
     }
 
