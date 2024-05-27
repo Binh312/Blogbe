@@ -2,16 +2,19 @@ package com.web.service;
 
 import com.web.dto.request.FileDto;
 import com.web.dto.request.BlogRequest;
+import com.web.dto.request.FilterBlogRequest;
 import com.web.entity.*;
 import com.web.enums.ActiveStatus;
 import com.web.exception.MessageException;
 import com.web.mapper.BlogMapper;
 import com.web.repository.*;
+import com.web.repositoryCustom.CustomBlogRepository;
 import com.web.utils.Contains;
 import com.web.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -251,5 +254,10 @@ public class BlogService {
             blogRepository.save(blog.get());
             return ActiveStatus.DA_MO_KHOA;
         }
+    }
+
+    public Page<Blog> filterBlog(FilterBlogRequest request, Pageable pageable){
+        Specification<Blog> blogSpecification = CustomBlogRepository.filterBlog(request);
+        return blogRepository.findAll(blogSpecification,pageable);
     }
 }

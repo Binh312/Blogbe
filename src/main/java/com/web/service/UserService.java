@@ -3,16 +3,19 @@ package com.web.service;
 import com.web.dto.CustomUserDetails;
 import com.web.dto.LoginDto;
 import com.web.dto.TokenDto;
+import com.web.dto.request.FilterUserRequest;
 import com.web.entity.User;
 import com.web.enums.ActiveStatus;
 import com.web.exception.MessageException;
 import com.web.jwt.JwtTokenProvider;
 import com.web.repository.UserRepository;
+import com.web.repositoryCustom.CustomUserRepository;
 import com.web.utils.Contains;
 import com.web.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -186,19 +189,23 @@ public class UserService {
     }
 
     public Page<User> getAllUser(String userName, String roleName, Boolean active, Pageable pageable){
-        if (userName == null && roleName == null && active == null) {
+        if (userName.isEmpty() && roleName.isEmpty() && active == null) {
             return userRepository.getAllUser(pageable);
-        } if (userName == null && roleName == null && active) {
+        } else if (userName.isEmpty() && roleName.isEmpty() && active) {
             return userRepository.getUserActived(pageable);
-        } if (userName == null && roleName == null) {
+        } else if (userName.isEmpty() && roleName.isEmpty() && !active) {
             return userRepository.getUserUnactived(pageable);
-        } else if (userName == null) {
+        } else if (userName.isEmpty() && active == null) {
             return userRepository.findByRole(roleName,pageable);
-        } else if (roleName == null) {
+        } else if (roleName == null && active == null) {
             return userRepository.findByName(userName,pageable);
         } else {
             return userRepository.findByParamAndRole(userName,roleName,pageable);
         }
     }
 
+    public Page<User> filterUser(FilterUserRequest filterUserRequest, Pageable pageable){
+        Specification<User> userSpecification = CustomUserRepository.filterUser(filterUserRequest);
+        return userRepository.findAll(userSpecification, pageable);
+    }
 }

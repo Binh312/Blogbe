@@ -117,4 +117,12 @@ public class DepartmentService {
         return departmentRepository.getAllDepartment();
     }
 
+    public Department findDepartmentById(Long departmentId){
+        Optional<Department> departmentOptional = departmentRepository.findById(departmentId);
+        if (departmentOptional.isEmpty()){
+            throw new MessageException("Khoa không tồn tại");
+        }
+        return departmentOptional.get();
+    }
+
 }

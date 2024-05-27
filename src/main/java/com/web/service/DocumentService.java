@@ -1,16 +1,19 @@
 package com.web.service;
 
 import com.web.dto.request.DocumentRequest;
+import com.web.dto.request.FilterDocumentRequest;
 import com.web.entity.*;
 import com.web.enums.ActiveStatus;
 import com.web.exception.MessageException;
 import com.web.mapper.DocumentMapper;
 import com.web.repository.*;
+import com.web.repositoryCustom.CustomDocumentRepository;
 import com.web.utils.Contains;
 import com.web.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -171,7 +174,7 @@ public class DocumentService {
         if (keywords.isEmpty() && subjectId == null) {
             return documentRepository.getDocumentUnactived(pageable);
         } else if (keywords.isEmpty()) {
-            return documentRepository.getDocumentBySubject(subjectId, pageable);
+            return documentRepository.getDocumentUnactiveBySubject(subjectId, pageable);
         } else {
             return documentRepository.searchDocumentUnActived(keywords, pageable);
         }
@@ -228,6 +231,11 @@ public class DocumentService {
         documentUser.setUser(user);
         documentUserRepository.save(documentUser);
         return "Đã lưu lại tài liệu";
+    }
+
+    public Page<Document> filterDocument(FilterDocumentRequest request, Pageable pageable){
+        Specification<Document> documentSpecification = CustomDocumentRepository.filterDocument(request);
+        return documentRepository.findAll(documentSpecification,pageable);
     }
 
 //    public Page<Document> getDocumentByDepartment(Long departmentId, Pageable pageable){

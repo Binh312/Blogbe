@@ -126,4 +126,12 @@ public class SubjectService {
         }
     }
 
+    public Subject findSubjectById(Long subjectId){
+        Optional<Subject> subjectOptional = subjectRepository.findById(subjectId);
+        if (subjectOptional.isEmpty()){
+            throw new MessageException("Môn học không tồn tại");
+        }
+        return subjectOptional.get();
+    }
+
 }

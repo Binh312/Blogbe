@@ -26,7 +26,7 @@ public class SpecializeResponse {
                 specialize.getId(),
                 specialize.getCodeSpecialize(),
                 specialize.getNameSpecialize(),
-                specialize.getIdDepartment()
+                specialize.getDepartment().getId()
         );
     }
 }

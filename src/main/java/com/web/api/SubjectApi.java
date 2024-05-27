@@ -41,4 +41,11 @@ public class SubjectApi {
         Page<SubjectResponse> subjectResponses = page.map(SubjectResponse::converterSubjectToSubjectResponse);
         return new ResponseEntity<>(subjectResponses, HttpStatus.OK);
     }
+
+    @GetMapping("/public/find-by-id")
+    public ResponseEntity<?> findSubjectById(@RequestParam Long subjectId){
+        Subject subject = subjectService.findSubjectById(subjectId);
+        SubjectResponse subjectResponse = SubjectResponse.converterSubjectToSubjectResponse(subject);
+        return new ResponseEntity<>(subjectResponse, HttpStatus.OK);
+    }
 }

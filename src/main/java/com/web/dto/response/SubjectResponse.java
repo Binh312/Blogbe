@@ -19,14 +19,14 @@ public class SubjectResponse {
 
     private String nameSubject;
 
-    private Long connecIdSpecialize;
+    private Long specializeId;
 
     public static SubjectResponse converterSubjectToSubjectResponse(Subject subject){
         return new SubjectResponse(
                 subject.getId(),
                 subject.getCodeSubject(),
                 subject.getNameSubject(),
-                subject.getConnecIdSpecialize()
+                subject.getSpecialize().getId()
         );
     }
 }

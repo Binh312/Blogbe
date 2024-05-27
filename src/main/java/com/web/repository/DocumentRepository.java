@@ -33,8 +33,11 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
             "and d.actived = false order by d.createdDate desc, d.createdTime desc")
     Page<Document> searchDocumentUnActived(String keywords, Pageable pageable);
 
-    @Query("select d from Document d where d.subject.id = ?1 and d.actived = true")
+    @Query("select d from Document d where d.subject.id = ?1 and d.actived = true order by d.createdDate desc, d.createdTime desc")
     Page<Document> getDocumentBySubject(Long subjectId, Pageable pageable);
+
+    @Query("select d from Document d where d.subject.id = ?1 and d.actived = false order by d.createdDate desc, d.createdTime desc")
+    Page<Document> getDocumentUnactiveBySubject(Long subjectId, Pageable pageable);
 
     @Query("select d from Document d where d.subject.id = ?1")
     List<Document> findDocumentBySubject(Long subjectId);
@@ -57,6 +60,8 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
 
     @Query("select d from Document d join DocumentUser du on d.id = du.document.id where du.user.id = ?1")
     Page<Document> getDocumentSaved(Long userId,Pageable pageable);
+
+    Page<Document> findAll(Specification<Document> documentSpecification, Pageable pageable);
 
 //    @Query("select d from DocumentCategory d where d.category.id = ?1 and d.document.actived = true")
 //    Page<Document> getDocumentByCategory(Long categoryId, Pageable pageable);

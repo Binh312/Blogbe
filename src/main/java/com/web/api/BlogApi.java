@@ -1,6 +1,7 @@
 package com.web.api;
 
 import com.web.dto.request.BlogRequest;
+import com.web.dto.request.FilterBlogRequest;
 import com.web.entity.Blog;
 import com.web.enums.ActiveStatus;
 import com.web.service.BlogService;
@@ -75,4 +76,9 @@ public class BlogApi {
         return new ResponseEntity<>(page, HttpStatus.CREATED);
     }
 
+    @GetMapping("/blog-manager/filter")
+    public ResponseEntity<?> filterBlog(FilterBlogRequest request, Pageable pageable){
+        Page<Blog> page = blogService.filterBlog(request,pageable);
+        return new ResponseEntity<>(page, HttpStatus.OK);
+    }
 }

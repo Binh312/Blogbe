@@ -43,4 +43,11 @@ public class SpecializeApi {
         ).collect(Collectors.toList());
         return new ResponseEntity<>(specializeResponses, HttpStatus.OK);
     }
+
+    @GetMapping("/public/find-by-id")
+    public ResponseEntity<?> findSpecializeById(@RequestParam Long specializeId){
+        Specialize specialize = specializeService.findSpecializeById(specializeId);
+        SpecializeResponse specializeResponse = SpecializeResponse.converterSpecializeToSpecializeResponse(specialize);
+        return new ResponseEntity<>(specializeResponse, HttpStatus.OK);
+    }
 }

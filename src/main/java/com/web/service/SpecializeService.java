@@ -127,4 +127,12 @@ public class SpecializeService {
             return specializeRepository.findSpecializesByDepartment(departmentId);
         }
     }
+
+    public Specialize findSpecializeById(Long specializeId){
+        Optional<Specialize> specializeOptional = specializeRepository.findById(specializeId);
+        if (specializeOptional.isEmpty()){
+            throw new MessageException("Ngành học không tồn tại");
+        }
+        return specializeOptional.get();
+    }
 }

@@ -1,6 +1,7 @@
 package com.web.api;
 
 import com.web.dto.*;
+import com.web.dto.request.FilterUserRequest;
 import com.web.entity.User;
 import com.web.enums.ActiveStatus;
 import com.web.jwt.JwtTokenProvider;
@@ -72,9 +73,16 @@ public class UserApi {
     }
 
     @GetMapping("/admin/get-all-user")
-    public ResponseEntity<?> getAllUser(String userName, String roleName, Boolean active, Pageable pageable){
+    public ResponseEntity<?> getAllUser(@RequestParam String userName,
+                                        @RequestParam String roleName,
+                                        @RequestParam Boolean active, Pageable pageable){
         Page<User> page = userService.getAllUser(userName,roleName,active,pageable);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
+    @GetMapping("/admin/filter")
+    public ResponseEntity<?> filterUser(FilterUserRequest request, Pageable pageable) {
+        Page<User> page = userService.filterUser(request,pageable);
+        return new ResponseEntity<>(page, HttpStatus.OK);
+    }
 }

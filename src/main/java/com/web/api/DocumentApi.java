@@ -1,6 +1,7 @@
 package com.web.api;
 
 import com.web.dto.request.DocumentRequest;
+import com.web.dto.request.FilterDocumentRequest;
 import com.web.dto.response.DocumentResponse;
 import com.web.dto.response.SubjectResponse;
 import com.web.entity.Blog;
@@ -72,6 +73,13 @@ public class DocumentApi {
         Page<Document> document = documentService.getAllUnactived(keywords,subjectId,pageable);
         Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
         return new ResponseEntity<>(documentResponses, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/document-manager/filter")
+    public ResponseEntity<?> filterDocument(FilterDocumentRequest request, Pageable pageable){
+        Page<Document> document = documentService.filterDocument(request,pageable);
+        Page<DocumentResponse> documentResponses = document.map(DocumentResponse::converterDocumentToDocumentResponse);
+        return new ResponseEntity<>(documentResponses, HttpStatus.OK);
     }
 
     @PostMapping("/all/save-or-unsave-document")

@@ -45,4 +45,11 @@ public class DepartmentApi {
         ).collect(Collectors.toList());
         return new ResponseEntity<>(departmentResponses, HttpStatus.OK);
     }
+
+    @GetMapping("/public/find-by-id")
+    public ResponseEntity<?> findDepartmentById(@RequestParam Long departmentId){
+        Department department = departmentService.findDepartmentById(departmentId);
+        DepartmentResponse departmentResponse = DepartmentResponse.converterDepaertmentToDepartmentResponse(department);
+        return new ResponseEntity<>(departmentResponse, HttpStatus.OK);
+    }
 }
