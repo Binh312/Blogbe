@@ -41,10 +41,10 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
     @Query("select sbj from Subject sbj where sbj.specialize.id = ?1")
     List<Subject> findSubjectsBySpecialize(Long specializeId);
 
-    @Query("select sbj from Subject sbj where sbj.codeSubject like ?1")
+    @Query("select sbj from Subject sbj where sbj.codeSubject like %?1%")
     Optional<Subject> findSubjectByCode(String code);
 
-    @Query("select sbj from Subject sbj where sbj.nameSubject like ?1")
+    @Query("select sbj from Subject sbj where sbj.nameSubject like %?1%")
     Optional<Subject> findSubjectByName(String name);
 
     @Query("select sbj from Subject sbj where sbj.id != ?1")

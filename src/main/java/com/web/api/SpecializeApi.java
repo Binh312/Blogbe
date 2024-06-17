@@ -7,6 +7,8 @@ import com.web.entity.Specialize;
 import com.web.repository.SpecializeRepository;
 import com.web.service.SpecializeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +43,13 @@ public class SpecializeApi {
         List<SpecializeResponse> specializeResponses = specializes.stream().map(
                 SpecializeResponse::converterSpecializeToSpecializeResponse
         ).collect(Collectors.toList());
+        return new ResponseEntity<>(specializeResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("/document-manager/get-all")
+    public ResponseEntity<?> adminGetAllSpecialize(@RequestParam String keywords, Pageable pageable){
+        Page<Specialize> page = specializeService.adminGetAllSpecialize(keywords, pageable);
+        Page<SpecializeResponse> specializeResponses = page.map(SpecializeResponse::converterSpecializeToSpecializeResponse);
         return new ResponseEntity<>(specializeResponses, HttpStatus.OK);
     }
 

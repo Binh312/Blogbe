@@ -10,6 +10,8 @@ import com.web.exception.MessageException;
 import com.web.mapper.DepartmentMapper;
 import com.web.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -115,6 +117,14 @@ public class DepartmentService {
 
     public List<Department> findAllDepartment(){
         return departmentRepository.getAllDepartment();
+    }
+
+    public Page<Department> adminGetAllDepartment(String keywords, Pageable pageable){
+        if (keywords.isEmpty()){
+            return departmentRepository.adminGetAllDepartment(pageable);
+        } else {
+            return departmentRepository.searchDepartment(keywords,pageable);
+        }
     }
 
     public Department findDepartmentById(Long departmentId){

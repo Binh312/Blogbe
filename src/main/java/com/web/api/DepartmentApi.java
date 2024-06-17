@@ -6,6 +6,8 @@ import com.web.entity.Department;
 import com.web.repository.SpecializeRepository;
 import com.web.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +45,13 @@ public class DepartmentApi {
         List<DepartmentResponse> departmentResponses = departments.stream().map(
                 DepartmentResponse::converterDepaertmentToDepartmentResponse
         ).collect(Collectors.toList());
+        return new ResponseEntity<>(departmentResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("/document-manager/get-all")
+    public ResponseEntity<?> adminGetAllDepartment(@RequestParam String keywords, Pageable pageable){
+        Page<Department> page = departmentService.adminGetAllDepartment(keywords, pageable);
+        Page<DepartmentResponse> departmentResponses = page.map(DepartmentResponse::converterDepaertmentToDepartmentResponse);
         return new ResponseEntity<>(departmentResponses, HttpStatus.OK);
     }
 

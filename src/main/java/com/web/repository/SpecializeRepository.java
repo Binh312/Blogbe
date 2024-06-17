@@ -1,6 +1,8 @@
 package com.web.repository;
 
 import com.web.entity.Specialize;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,10 +19,16 @@ public interface SpecializeRepository extends JpaRepository<Specialize, Long> {
     @Query("select s from Specialize s")
     List<Specialize> getAllSpecialize();
 
-    @Query("select s from Specialize s where s.codeSpecialize like ?1")
+    @Query("select s from Specialize s")
+    Page<Specialize> adminGetAllSpecialize(Pageable pageable);
+
+    @Query("select s from Specialize s where s.codeSpecialize like %?1% or s.nameSpecialize like %?1%")
+    Page<Specialize> searchSpecialize(String keywords, Pageable pageable);
+
+    @Query("select s from Specialize s where s.codeSpecialize like %?1%")
     Optional<Specialize> findSpecializeByCode(String code);
 
-    @Query("select s from Specialize s where s.nameSpecialize like ?1")
+    @Query("select s from Specialize s where s.nameSpecialize like %?1%")
     Optional<Specialize> findSpecializeByName(String name);
 
     @Query("select s from Specialize s where s.id != ?1")

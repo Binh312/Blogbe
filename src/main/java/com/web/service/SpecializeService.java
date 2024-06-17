@@ -9,6 +9,8 @@ import com.web.exception.MessageException;
 import com.web.mapper.SpecializeMapper;
 import com.web.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -125,6 +127,14 @@ public class SpecializeService {
             return specializeRepository.getAllSpecialize();
         } else {
             return specializeRepository.findSpecializesByDepartment(departmentId);
+        }
+    }
+
+    public Page<Specialize> adminGetAllSpecialize(String keywords, Pageable pageable){
+        if (keywords.isEmpty()){
+            return specializeRepository.adminGetAllSpecialize(pageable);
+        } else {
+            return specializeRepository.searchSpecialize(keywords, pageable);
         }
     }
 
